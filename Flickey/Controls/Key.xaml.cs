@@ -1,5 +1,4 @@
-﻿using Reactive.Bindings.Extensions;
-using System;
+﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
@@ -66,29 +65,21 @@ namespace Flickey.Controls
             InitializeComponent();
 
             //  イベントをIO<T>化する。
-            //  複数回SubscribeされるためHot変換しておく。
-            var touchDownStream = Observable.FromEvent<EventHandler<TouchEventArgs>, TouchEventArgs>(
+            //  Keyboard側でHot変換するため、ここではColdで返す。
+            this.TouchDownAsObservable = Observable.FromEvent<EventHandler<TouchEventArgs>, TouchEventArgs>(
                 onNext => (sender, args) => onNext(args),
                 handler => this.TouchDown += handler,
-                handler => this.TouchDown -= handler).Publish();
+                handler => this.TouchDown -= handler);
 
-            var touchUpStream = Observable.FromEvent<EventHandler<TouchEventArgs>, TouchEventArgs>(
+            this.TouchUpAsObservable = Observable.FromEvent<EventHandler<TouchEventArgs>, TouchEventArgs>(
                 onNext => (sender, args) => onNext(args),
                 handler => this.TouchUp += handler,
-                handler => this.TouchUp -= handler).Publish();
+                handler => this.TouchUp -= handler);
 
-            var touchMoveStream = Observable.FromEvent<EventHandler<TouchEventArgs>, TouchEventArgs>(
+            this.TouchMoveAsObservable = Observable.FromEvent<EventHandler<TouchEventArgs>, TouchEventArgs>(
                 onNext => (sender, args) => onNext(args),
                 handler => this.PreviewTouchMove += handler,
-                handler => this.PreviewTouchMove -= handler).Publish();
-
-            touchDownStream.Connect().AddTo(this.disposable);
-            touchUpStream.Connect().AddTo(this.disposable);
-            touchMoveStream.Connect().AddTo(this.disposable);
-
-            this.TouchDownAsObservable = touchDownStream;
-            this.TouchUpAsObservable = touchUpStream;
-            this.TouchMoveAsObservable = touchMoveStream;
+                handler => this.PreviewTouchMove -= handler);
         }
 
         /// <summary>
