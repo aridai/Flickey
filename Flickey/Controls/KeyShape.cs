@@ -8,12 +8,13 @@ namespace Flickey.Controls
     public enum KeyShape
     {
         None,
+        Empty,
         Normal,
         SlideLeft,
         SlideRight,
         SlideUp,
         SlideDown,
-        Hold,
+        HoldCenter,
         HoldLeft,
         HoldRight,
         HoldUp,
