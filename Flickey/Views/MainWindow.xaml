@@ -10,16 +10,16 @@
     Width="350"
     Height="400">
 
-    <Grid>
+    <Grid ShowGridLines="True">
         <Grid.RowDefinitions>
-            <RowDefinition Height="64" />
+            <RowDefinition Height="32" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="64" />
+            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="64" />
+            <ColumnDefinition Width="32" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="64" />
+            <ColumnDefinition Width="32" />
         </Grid.ColumnDefinitions>
 
         <ctrls:Keyboard Grid.Row="1" Grid.Column="1" />
