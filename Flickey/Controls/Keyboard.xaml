@@ -1,0 +1,56 @@
+﻿<UserControl
+    x:Class="Flickey.Controls.Keyboard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ctrls="clr-namespace:Flickey.Controls"
+    mc:Ignorable="d">
+
+    <Grid ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ctrls:Key x:Name="Key00" Grid.Row="0" Grid.Column="0" Shape="None" />
+        <ctrls:Key x:Name="Key01" Grid.Row="0" Grid.Column="1" Shape="Empty" />
+        <ctrls:Key x:Name="Key02" Grid.Row="0" Grid.Column="2" Shape="Normal" />
+        <ctrls:Key x:Name="Key03" Grid.Row="0" Grid.Column="3" Shape="SlideUp" />
+        <ctrls:Key x:Name="Key04" Grid.Row="0" Grid.Column="4" Shape="SlideDown" />
+
+        <ctrls:Key x:Name="Key10" Grid.Row="1" Grid.Column="0" Shape="SlideRight" />
+        <ctrls:Key x:Name="Key11" Grid.Row="1" Grid.Column="1" Shape="SlideLeft" />
+        <ctrls:Key x:Name="Key12" Grid.Row="1" Grid.Column="2" Shape="HoldCenter" />
+        <ctrls:Key x:Name="Key13" Grid.Row="1" Grid.Column="3" Shape="HoldUp" />
+        <ctrls:Key x:Name="Key14" Grid.Row="1" Grid.Column="4" Shape="HoldDown" />
+
+        <ctrls:Key x:Name="Key20" Grid.Row="2" Grid.Column="0" Shape="HoldRight" />
+        <ctrls:Key x:Name="Key21" Grid.Row="2" Grid.Column="1" Shape="HoldLeft" />
+        <ctrls:Key x:Name="Key22" Grid.Row="2" Grid.Column="2" />
+        <ctrls:Key x:Name="Key23" Grid.Row="2" Grid.Column="3" />
+        <ctrls:Key x:Name="Key24" Grid.Row="2" Grid.Column="4" />
+
+        <ctrls:Key x:Name="Key30" Grid.Row="3" Grid.Column="0" />
+        <ctrls:Key x:Name="Key31" Grid.Row="3" Grid.Column="1" />
+        <ctrls:Key x:Name="Key32" Grid.Row="3" Grid.Column="2" />
+        <ctrls:Key x:Name="Key33" Grid.Row="3" Grid.Column="3" />
+        <ctrls:Key x:Name="Key34" Grid.Row="3" Grid.Column="4" />
+
+        <ctrls:Key x:Name="Key40" Grid.Row="4" Grid.Column="0" />
+        <ctrls:Key x:Name="Key41" Grid.Row="4" Grid.Column="1" />
+        <ctrls:Key x:Name="Key42" Grid.Row="4" Grid.Column="2" />
+        <ctrls:Key x:Name="Key43" Grid.Row="4" Grid.Column="3" />
+        <ctrls:Key x:Name="Key44" Grid.Row="4" Grid.Column="4" />
+    </Grid>
+</UserControl>
