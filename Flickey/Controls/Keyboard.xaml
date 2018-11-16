@@ -23,20 +23,20 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ctrls:Key x:Name="Key00" Grid.Row="0" Grid.Column="0" />
-        <ctrls:Key x:Name="Key01" Grid.Row="0" Grid.Column="1" />
-        <ctrls:Key x:Name="Key02" Grid.Row="0" Grid.Column="2" />
-        <ctrls:Key x:Name="Key03" Grid.Row="0" Grid.Column="3" />
-        <ctrls:Key x:Name="Key04" Grid.Row="0" Grid.Column="4" />
+        <ctrls:Key x:Name="Key00" Grid.Row="0" Grid.Column="0" Shape="None" />
+        <ctrls:Key x:Name="Key01" Grid.Row="0" Grid.Column="1" Shape="Empty" />
+        <ctrls:Key x:Name="Key02" Grid.Row="0" Grid.Column="2" Shape="Normal" />
+        <ctrls:Key x:Name="Key03" Grid.Row="0" Grid.Column="3" Shape="SlideUp" />
+        <ctrls:Key x:Name="Key04" Grid.Row="0" Grid.Column="4" Shape="SlideDown" />
 
-        <ctrls:Key x:Name="Key10" Grid.Row="1" Grid.Column="0" />
-        <ctrls:Key x:Name="Key11" Grid.Row="1" Grid.Column="1" />
-        <ctrls:Key x:Name="Key12" Grid.Row="1" Grid.Column="2" />
-        <ctrls:Key x:Name="Key13" Grid.Row="1" Grid.Column="3" />
-        <ctrls:Key x:Name="Key14" Grid.Row="1" Grid.Column="4" />
+        <ctrls:Key x:Name="Key10" Grid.Row="1" Grid.Column="0" Shape="SlideRight" />
+        <ctrls:Key x:Name="Key11" Grid.Row="1" Grid.Column="1" Shape="SlideLeft" />
+        <ctrls:Key x:Name="Key12" Grid.Row="1" Grid.Column="2" Shape="HoldCenter" />
+        <ctrls:Key x:Name="Key13" Grid.Row="1" Grid.Column="3" Shape="HoldUp" />
+        <ctrls:Key x:Name="Key14" Grid.Row="1" Grid.Column="4" Shape="HoldDown" />
 
-        <ctrls:Key x:Name="Key20" Grid.Row="2" Grid.Column="0" />
-        <ctrls:Key x:Name="Key21" Grid.Row="2" Grid.Column="1" />
+        <ctrls:Key x:Name="Key20" Grid.Row="2" Grid.Column="0" Shape="HoldRight" />
+        <ctrls:Key x:Name="Key21" Grid.Row="2" Grid.Column="1" Shape="HoldLeft" />
         <ctrls:Key x:Name="Key22" Grid.Row="2" Grid.Column="2" />
         <ctrls:Key x:Name="Key23" Grid.Row="2" Grid.Column="3" />
         <ctrls:Key x:Name="Key24" Grid.Row="2" Grid.Column="4" />
