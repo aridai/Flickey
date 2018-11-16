@@ -15,6 +15,12 @@ namespace Flickey.Controls
     /// </summary>
     public partial class Keyboard : UserControl, IDisposable
     {
+        //  TouchMoveイベントが消失してから、入力操作の終了判定までのタイムアウト。
+        private readonly TimeSpan moveEventTimeout = TimeSpan.FromSeconds(0.3);
+
+        //  入力操作時のスライド入力とみなされる指の移動量のしきい値。
+        private readonly float distanceThreshold = 64.0f;
+
         private readonly CompositeDisposable disposable = new CompositeDisposable();
 
         //  5x5=25個のキーを保持しておく。
@@ -27,6 +33,10 @@ namespace Flickey.Controls
 
         //  入力操作中かどうかを通知・保持する。
         private readonly ReadOnlyReactiveProperty<bool> isInputOperationInProgress;
+
+        //  入力操作時の相対的な指の位置を通知する。
+        //  具体的な座標ではなく、上下左右などで表される。
+        private readonly ReadOnlyReactiveProperty<RelativeFingerPos> fingerPos;
 
         /// <summary>
         /// インスタンスを初期化します。
@@ -73,9 +83,37 @@ namespace Flickey.Controls
             (this.touchUpStream as IConnectableObservable<(Key, TouchEventArgs)>).Connect().AddTo(this.disposable);
             (this.touchMoveStream as IConnectableObservable<(Key, TouchEventArgs)>).Connect().AddTo(this.disposable);
 
-            //this.touchDownStream.Subscribe(tuple => System.Diagnostics.Debug.WriteLine($"Down")).AddTo(this.disposable);
-            //this.touchUpStream.Subscribe(tuple => System.Diagnostics.Debug.WriteLine($"Up")).AddTo(this.disposable);
-            //this.touchMoveStream.Subscribe(tuple => System.Diagnostics.Debug.WriteLine($"Move")).AddTo(this.disposable);
+            //  入力操作中かどうかを通知する。
+            //  タイムアウト時間やTouchDownイベントのみしか流れなかった場合については要検証。
+            //  (たまにTouchUpイベントとTouchMoveイベントが流れないことがある。)
+            this.isInputOperationInProgress = Observable.Merge(
+                this.touchDownStream.Select(_ => true),
+                this.touchUpStream.Select(_ => false),
+                this.touchMoveStream.Throttle(this.moveEventTimeout)
+                .ObserveOnDispatcher().Select(_ => false))
+                .ToReadOnlyReactiveProperty()
+                .AddTo(this.disposable);
+
+            //  指の移動量を通知する。
+            //  複数箇所で使うためHot変換しておく。
+            var fingerMovementStream = Observable.WithLatestFrom(
+                this.touchMoveStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
+                this.touchDownStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
+                (current, starting) => current - starting).Publish();
+            fingerMovementStream.Connect().AddTo(this.disposable);
+
+            //  指の位置を通知する。
+            this.fingerPos = fingerMovementStream
+                .Select(vec =>
+                {
+                    if (Math.Abs(vec.X) > this.distanceThreshold || Math.Abs(vec.Y) > this.distanceThreshold)
+                    {
+                        if (Math.Abs(vec.X) > Math.Abs(vec.Y)) return (vec.X > 0) ? RelativeFingerPos.Right : RelativeFingerPos.Left;
+                        else return (vec.Y > 0) ? RelativeFingerPos.Bottom : RelativeFingerPos.Top;
+                    }
+
+                    return RelativeFingerPos.Neutral;
+                }).ToReadOnlyReactiveProperty().AddTo(this.disposable);
         }
 
         /// <summary>

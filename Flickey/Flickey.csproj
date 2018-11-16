@@ -94,6 +94,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\FingerRelativePosition.cs" />
     <Compile Include="Controls\Key.xaml.cs">
       <DependentUpon>Key.xaml</DependentUpon>
     </Compile>
