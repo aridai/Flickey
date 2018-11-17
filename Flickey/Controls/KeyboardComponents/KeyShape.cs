@@ -7,7 +7,6 @@ namespace Flickey.Controls.KeyboardComponents
     /// </summary>
     public enum KeyShape
     {
-        None,
         Empty,
         Normal,
         SlideLeft,

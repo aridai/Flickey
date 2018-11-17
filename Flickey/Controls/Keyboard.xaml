@@ -23,7 +23,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ctrls:Key x:Name="Key00" Grid.Row="0" Grid.Column="0" Shape="None" />
+        <ctrls:Key x:Name="Key00" Grid.Row="0" Grid.Column="0" />
         <ctrls:Key x:Name="Key01" Grid.Row="0" Grid.Column="1" Shape="Empty" />
         <ctrls:Key x:Name="Key02" Grid.Row="0" Grid.Column="2" Shape="Normal" />
         <ctrls:Key x:Name="Key03" Grid.Row="0" Grid.Column="3" Shape="SlideUp" />

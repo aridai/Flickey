@@ -17,9 +17,6 @@
                 <ResourceDictionary>
                     <Style TargetType="ctrls:Key">
                         <Style.Triggers>
-                            <Trigger Property="Shape" Value="None">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-None}" />
-                            </Trigger>
                             <Trigger Property="Shape" Value="Empty">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Empty}" />
                             </Trigger>

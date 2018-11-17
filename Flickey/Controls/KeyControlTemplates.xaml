@@ -3,12 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctrls="clr-namespace:Flickey.Controls">
 
-    <ControlTemplate x:Key="KeyControlTemplate-None" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="None" />
-        </Grid>
-    </ControlTemplate>
-
     <ControlTemplate x:Key="KeyControlTemplate-Normal" TargetType="ctrls:Key">
         <Grid>
             <Button Content="Normal" />
