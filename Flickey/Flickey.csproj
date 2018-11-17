@@ -97,6 +97,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\KeyboardComponents\FingerRelativePosition.cs" />
+    <Compile Include="Controls\KeyboardComponents\IKeycaps.cs" />
     <Compile Include="Controls\KeyboardComponents\InputOperationType.cs" />
     <Compile Include="Controls\Key.xaml.cs">
       <DependentUpon>Key.xaml</DependentUpon>
@@ -104,7 +105,11 @@
     <Compile Include="Controls\Keyboard.xaml.cs">
       <DependentUpon>Keyboard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KeyboardComponents\Keycaps.cs" />
+    <Compile Include="Controls\KeyboardComponents\KeyEffect.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyShape.cs" />
+    <Compile Include="Controls\KeyboardComponents\LabelStyle.cs" />
+    <Compile Include="Controls\KeyboardComponents\KeycapsManager.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

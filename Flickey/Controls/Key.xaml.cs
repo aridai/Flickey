@@ -50,6 +50,30 @@ namespace Flickey.Controls
             = DependencyProperty.Register(nameof(Shape), typeof(KeyShape), typeof(Key), new PropertyMetadata(KeyShape.Normal));
 
         /// <summary>
+        /// KeyEffectプロパティの依存関係プロパティ。
+        /// </summary>
+        public static DependencyProperty KeyEffectProperty
+            = DependencyProperty.Register(nameof(KeyEffect), typeof(KeyEffect), typeof(Key), new PropertyMetadata(KeyEffect.NoEffect));
+
+        /// <summary>
+        /// LabelStyleプロパティの依存関係プロパティ。
+        /// </summary>
+        public static DependencyProperty LabelStyleProperty
+            = DependencyProperty.Register(nameof(LabelStyle), typeof(LabelStyle), typeof(Key), new PropertyMetadata(LabelStyle.OnlyFirstCaracter));
+
+        /// <summary>
+        /// PrimaryTextプロパティの依存関係プロパティ。
+        /// </summary>
+        public static DependencyProperty PrimaryTextProperty
+            = DependencyProperty.Register(nameof(PrimaryText), typeof(string), typeof(Key), new PropertyMetadata(string.Empty));
+
+        /// <summary>
+        /// SecondaryTextプロパティの依存関係プロパティ。
+        /// </summary>
+        public static DependencyProperty SecondaryTextProperty
+            = DependencyProperty.Register(nameof(SecondaryText), typeof(string), typeof(Key), new PropertyMetadata(default(string)));
+
+        /// <summary>
         /// キーの形を取得・設定します。
         /// 依存関係プロパティです。
         /// </summary>
@@ -57,6 +81,46 @@ namespace Flickey.Controls
         {
             get => (KeyShape)this.GetValue(ShapeProperty);
             set => this.SetValue(ShapeProperty, value);
+        }
+
+        /// <summary>
+        /// キーのエフェクトを取得・設定します。
+        /// 依存関係プロパティです。
+        /// </summary>
+        public KeyEffect KeyEffect
+        {
+            get => (KeyEffect)this.GetValue(KeyEffectProperty);
+            set => this.SetValue(KeyEffectProperty, value);
+        }
+
+        /// <summary>
+        /// キーの印字の表示方法を取得・設定します。
+        /// 依存関係プロパティです。
+        /// </summary>
+        public LabelStyle LabelStyle
+        {
+            get => (LabelStyle)this.GetValue(LabelStyleProperty);
+            set => this.SetValue(LabelStyleProperty, value);
+        }
+
+        /// <summary>
+        /// キーの印字を取得・設定します。
+        /// 依存関係プロパティです。
+        /// </summary>
+        public string PrimaryText
+        {
+            get => (string)this.GetValue(PrimaryTextProperty);
+            set => this.SetValue(PrimaryTextProperty, value);
+        }
+
+        /// <summary>
+        /// キーの印字の2行目を取得・設定します。
+        /// 依存関係プロパティです。
+        /// </summary>
+        public string SecondaryText
+        {
+            get => (string)this.GetValue(SecondaryTextProperty);
+            set => this.SetValue(SecondaryTextProperty, value);
         }
 
         /// <summary>

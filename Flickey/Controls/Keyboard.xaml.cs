@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Reactive.Bindings;
@@ -48,6 +49,21 @@ namespace Flickey.Controls
         //  入力操作時の相対的な指の位置を通知する。
         //  具体的な座標ではなく、上下左右などで表される。
         private readonly ReadOnlyReactiveProperty<RelativeFingerPos> fingerPos;
+
+        /// <summary>
+        /// 入力確定時に呼ばれるコマンドの依存関係プロパティ。
+        /// </summary>
+        public static readonly DependencyProperty CommandProperty =
+            DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(Keyboard));
+
+        /// <summary>
+        /// 入力確定時に呼ばれるコマンド。
+        /// </summary>
+        public ICommand Command
+        {
+            get => (ICommand)this.GetValue(CommandProperty);
+            set => this.SetValue(CommandProperty, value);
+        }
 
         /// <summary>
         /// インスタンスを初期化します。
