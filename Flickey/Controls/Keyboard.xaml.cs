@@ -18,6 +18,9 @@ namespace Flickey.Controls
         //  TouchMoveイベントが消失してから、入力操作の終了判定までのタイムアウト。
         private readonly TimeSpan moveEventTimeout = TimeSpan.FromSeconds(0.3);
 
+        //  入力操作のホールド操作だと判定されるまでのタイムアウト。
+        private readonly TimeSpan holdDetectionTimeout = TimeSpan.FromSeconds(0.5);
+
         //  入力操作時のスライド入力とみなされる指の移動量のしきい値。
         private readonly float distanceThreshold = 64.0f;
 
@@ -31,8 +34,18 @@ namespace Flickey.Controls
         private readonly IObservable<(Key key, TouchEventArgs args)> touchUpStream;
         private readonly IObservable<(Key key, TouchEventArgs args)> touchMoveStream;
 
+        //  タッチデバイスのIDを通知・保持する。
+        //  TouchDownのタイミングで更新され、TouchUpのタイミングでnullとなる。
+        //  TouchMoveはこのIDと同じIDを持つイベントのみが有効となる。
+
+        //  入力操作の対象のキーとデバイスIDを通知・保持する。
+        private readonly ReadOnlyReactiveProperty<(Key key, int? deviceId)> target;
+
         //  入力操作中かどうかを通知・保持する。
         private readonly ReadOnlyReactiveProperty<bool> isInputOperationInProgress;
+
+        //  入力操作の種類を通知する。
+        private readonly ReadOnlyReactiveProperty<InputOperationType> operationType;
 
         //  入力操作時の相対的な指の位置を通知する。
         //  具体的な座標ではなく、上下左右などで表される。
@@ -43,6 +56,9 @@ namespace Flickey.Controls
         /// </summary>
         public Keyboard()
         {
+            //  脳死で.AddTo(this.Disposable)をしているけど、ところどころ不要なものもある気がする。
+            //  そこはご愛嬌だが、気が向いたら考え直す。
+
             InitializeComponent();
 
             //  25個のキーを配列に格納する。
@@ -94,16 +110,18 @@ namespace Flickey.Controls
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this.disposable);
 
-            //  指の移動量を通知する。
-            //  複数箇所で使うためHot変換しておく。
-            var fingerMovementStream = Observable.WithLatestFrom(
-                this.touchMoveStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
-                this.touchDownStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
-                (current, starting) => current - starting).Publish();
-            fingerMovementStream.Connect().AddTo(this.disposable);
+            //  入力操作対象のキーとデバイスIDを通知する。
+            this.target = Observable.Merge(
+                this.touchDownStream.Select(tuple => (tuple.key, (int?)tuple.args.TouchDevice.Id)),
+                this.isInputOperationInProgress.Where(value => !value).Select<bool, (Key, int?)>(_ => (null, null)))
+                .ToReadOnlyReactiveProperty()
+                .AddTo(this.disposable);
 
             //  指の位置を通知する。
-            this.fingerPos = fingerMovementStream
+            var fingerPosStream = Observable.WithLatestFrom(
+                this.touchMoveStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
+                this.touchDownStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
+                (current, starting) => current - starting)
                 .Select(vec =>
                 {
                     if (Math.Abs(vec.X) > this.distanceThreshold || Math.Abs(vec.Y) > this.distanceThreshold)
@@ -113,7 +131,42 @@ namespace Flickey.Controls
                     }
 
                     return RelativeFingerPos.Neutral;
-                }).ToReadOnlyReactiveProperty().AddTo(this.disposable);
+                }).Publish();
+            fingerPosStream.Connect().AddTo(this.disposable);
+
+            //  プロパティ化しておく。
+            this.fingerPos = fingerPosStream.ToReadOnlyReactiveProperty().AddTo(this.disposable);
+
+            //  スライド・ホールドの入力判定を通知する。
+            var slideOperationDetectionStream = fingerPosStream
+                .Where(pos => pos != RelativeFingerPos.Neutral)
+                .Select(_ => InputOperationType.Slide);
+
+            var holdOperationDetectionStream = this.isInputOperationInProgress
+                .Where(value => value)
+                .Select(_ => this.target.Value.deviceId)
+                .Delay(this.holdDetectionTimeout)
+                .ObserveOnDispatcher()
+                .Where(id => id == this.target.Value.deviceId)
+                .Select(_ => InputOperationType.Hold);
+
+            //  入力操作の種類を通知する。
+            this.operationType = Observable.Merge(
+                this.isInputOperationInProgress.Select(value => value ? InputOperationType.Tap : InputOperationType.None),
+                slideOperationDetectionStream,
+                holdOperationDetectionStream)
+                .Pairwise()
+                .Where(pair =>
+                    !((pair.NewItem == InputOperationType.Slide && pair.OldItem != InputOperationType.Tap)
+                        || (pair.NewItem == InputOperationType.Hold && pair.OldItem != InputOperationType.Tap)))
+                .Select(pair => pair.NewItem)
+                .ToReadOnlyReactiveProperty()
+                .AddTo(this.disposable);
+
+            //this.target.Subscribe(tuple => System.Diagnostics.Debug.WriteLine($"キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}"));
+            //this.isInputOperationInProgress.Subscribe(value => System.Diagnostics.Debug.WriteLine(value ? "入力中" : "非入力中"));
+            //this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));
+            //this.fingerPos.Subscribe(pos => System.Diagnostics.Debug.WriteLine($"相対位置:{pos}"));
         }
 
         /// <summary>
