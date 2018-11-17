@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flickey.Controls
+namespace Flickey.Controls.KeyboardComponents
 {
     /// <summary>
     /// キーの形を列挙します。

@@ -10,6 +10,8 @@ using Reactive.Bindings.Extensions;
 
 namespace Flickey.Controls
 {
+    using KeyboardComponents;
+
     /// <summary>
     /// Interaction logic for Keyboard.xaml
     /// </summary>

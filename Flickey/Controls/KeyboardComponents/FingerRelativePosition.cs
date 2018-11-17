@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Flickey.Controls
+namespace Flickey.Controls.KeyboardComponents
 {
     /// <summary>
     /// 入力操作時の指の相対的な位置関係を列挙します。

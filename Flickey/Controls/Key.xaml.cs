@@ -7,6 +7,8 @@ using System.Windows.Input;
 
 namespace Flickey.Controls
 {
+    using KeyboardComponents;
+
     /// <summary>
     /// Interaction logic for Key.xaml
     /// </summary>
