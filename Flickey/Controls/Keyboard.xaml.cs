@@ -177,9 +177,9 @@ namespace Flickey.Controls
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this.disposable);
 
-            //this.inputOperationTarget.Subscribe(tuple => System.Diagnostics.Debug.WriteLine((tuple.key != null && tuple.deviceId != null) ? $"入力中 キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}" : "非入力中"));
-            //this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));
-            //this.fingerPos.Subscribe(pos => System.Diagnostics.Debug.WriteLine($"相対位置:{pos}"));
+            this.inputOperationTarget.Subscribe(tuple => System.Diagnostics.Debug.WriteLine((tuple.key != null && tuple.deviceId != null) ? $"入力中 キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}" : "非入力中"));
+            this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));
+            this.fingerPos.Subscribe(pos => System.Diagnostics.Debug.WriteLine($"相対位置:{pos}"));
         }
 
         /// <summary>
