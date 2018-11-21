@@ -224,7 +224,6 @@ namespace Flickey.Controls
         private void OnCharacterReceived(string character)
         {
             System.Diagnostics.Debug.WriteLine($"入力文字:{character}");
-
         }
 
         private void ChangeKeyboardType(KeyboardType type)

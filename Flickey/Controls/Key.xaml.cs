@@ -49,14 +49,20 @@ namespace Flickey.Controls
         /// </summary>
         public int Column => this.column ?? (int)(this.column = Grid.GetColumn(this));
 
-        //  なんかCharactersSetみたいなやつにまとめたほうが良さみあるかも!?
-
-        public IReadOnlyList<KeyCharacters> Characters { get; }
+        /// <summary>
+        /// キーボードの文字の集合のコレクションを取得・設定します。
+        /// </summary>
+        public IReadOnlyList<CharacterSet> CharacterSets { get; set; }
             = new[]{
-                new KeyCharacters(LabelStyle.TwoLines, new[] { "1", "☆", "♪", "→", null }),
-                new KeyCharacters(LabelStyle.OneLine, new[] { "A", "B", "C", null, null }),
-                new KeyCharacters(LabelStyle.OnlyFirstCaracter, new[] { "あ", "い", "う", "え", "お" })
+                new CharacterSet(LabelStyle.TwoLines, new[] { "1", "☆", "♪", "→", null }),
+                new CharacterSet(LabelStyle.OneLine, new[] { "A", "B", "C", null, null }),
+                new CharacterSet(LabelStyle.OnlyFirstCaracter, new[] { "あ", "い", "う", "え", "お" })
             };
+
+        /// <summary>
+        /// 現在選択中のキーボードの文字の集合を取得します。
+        /// </summary>
+        public CharacterSet CurrentCharacterSet => this.CharacterSets[(int)this.KeyboardType];
 
         /// <summary>
         /// Shapeプロパティの依存関係プロパティ。
@@ -241,7 +247,8 @@ namespace Flickey.Controls
             var grid = this.GetAdjacentGridNums(target, pos);
             if (grid == (this.Row, this.Column))
             {
-                sender(target.Characters[(int)this.KeyboardType].Characters[(int)pos]);
+                var character = target.CurrentCharacterSet.Characters[(int)pos];
+                sender(character);
             }
         }
 
@@ -249,13 +256,13 @@ namespace Flickey.Controls
         private void OnHolded(Key target)
         {
             //  とりあえず、ブラー効果をつける。
+            //  ホールド操作のポップ表示の対象になる場合はブラー効果は外れる。
             this.KeyEffect = KeyEffect.Blurred;
 
             //  操作対象のキーの持つ文字の配列を取得しておく。
             //  この配列は中央・左・上・右・下の順に文字が格納されていて、
             //  nullのときは、ホールド時のキーを表示させない。
-            var chars = target.Characters[(int)target.KeyboardType].Characters
-                .TakeWhile(character => character != null).ToArray();
+            var chars = target.CurrentCharacterSet.Characters.TakeWhile(character => character != null).ToArray();
 
             //  文字がポップアップ表示されるところにあるキーの形を変更しておく。
             for (int i = 0; i < chars.Length; i++)
@@ -272,15 +279,15 @@ namespace Flickey.Controls
         }
 
         //  指が動いたとき。
-        //  スライド・ホールド問わずに呼ばれる。
         private void OnFingerPosChanged(Key target, OperationType type, FingerPos pos)
         {
             //  ホールド操作のとき。
             if (type == OperationType.Hold)
             {
-                var num = target.Characters[(int)target.KeyboardType].Characters.TakeWhile(character => character != null).Count();
+                var num = target.CurrentCharacterSet.Characters.TakeWhile(character => character != null).Count();
                 if ((int)pos < num)
                 {
+                    //  指の位置にあるキーの形を変更する。
                     var grid = this.GetAdjacentGridNums(target, pos);
                     if (grid == (this.Row, this.Column))
                         this.KeyEffect = KeyEffect.Focused;
@@ -291,14 +298,15 @@ namespace Flickey.Controls
             else
             {
                 //  操作対象のキーの持つ文字の配列を取得しておく。
-                var chars = target.Characters[(int)target.KeyboardType].Characters
-                .TakeWhile(character => character != null).ToArray();
+                var chars = target.CurrentCharacterSet.Characters
+                    .TakeWhile(character => character != null).ToArray();
 
                 //  スライド可能な向きにあるキーをループで回す。
                 for (int i = 0; i < chars.Length; i++)
                 {
                     var currentPos = FingerPos.Neutral + i;
                     var grid = this.GetAdjacentGridNums(target, FingerPos.Neutral + i);
+
                     if (grid == (this.Row, this.Column))
                     {
                         //  指がある位置にあるキーならば。
@@ -329,6 +337,7 @@ namespace Flickey.Controls
             var colmn = key.Column;
             (int row, int column) grid;
 
+            //  GridのRowとColumnを計算する。
             switch (pos)
             {
                 case FingerPos.Neutral: grid = (row, colmn); break;
@@ -339,6 +348,7 @@ namespace Flickey.Controls
                 default: return (-1, -1);
             }
 
+            //  番号が0から4までに収まっていない場合は(-1,-1)とする。
             if (0 <= grid.row && grid.row < 5 && 0 <= grid.column && grid.column < 5) return grid;
             return (-1, -1);
         }
@@ -349,10 +359,10 @@ namespace Flickey.Controls
             //  形をリセットする。
             this.Shape = KeyShape.Normal;
             this.KeyEffect = KeyEffect.NoEffect;
-            this.LabelStyle = this.Characters[(int)this.KeyboardType].LabelStyle;
+            this.LabelStyle = this.CurrentCharacterSet.LabelStyle;
 
             //  印字の表示方法に応じて印字を設定する。
-            var chars = this.Characters[(int)this.KeyboardType].Characters.Where(c => c != null).ToArray();
+            var chars = this.CurrentCharacterSet.Characters.Where(c => c != null).ToArray();
             this.PrimaryText = (this.LabelStyle == LabelStyle.OneLine) ? chars.Aggregate(string.Empty, (total, next) => total + next) : chars.First();
             this.SecondaryText = chars.Skip(1).Aggregate(string.Empty, (total, next) => total + next);
         }

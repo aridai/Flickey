@@ -7,7 +7,7 @@
     xmlns:ctrls="clr-namespace:Flickey.Controls"
     mc:Ignorable="d">
 
-    <Grid ShowGridLines="True">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />

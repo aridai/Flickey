@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Flickey.Controls.KeyboardComponents
 {
     /// <summary>
-    /// キーの持つ文字を提供します。
+    /// キーが持つ文字の集合を提供します。
     /// </summary>
-    public struct KeyCharacters
+    public struct CharacterSet
     {
         /// <summary>
         /// 印字の表示方法を指定します。
@@ -22,9 +22,10 @@ namespace Flickey.Controls.KeyboardComponents
         /// インスタンスを生成して初期化します。
         /// </summary>
         /// <param name="displayStyle">印字の表示方法。</param>
-        /// <param name="characters">キーが持つ文字のコレクション。要素数は1から5までにする必要があります。</param>
-        public KeyCharacters(LabelStyle displayStyle, IReadOnlyList<string> characters)
+        /// <param name="characters">キーが持つ文字のコレクション。要素数は5にする必要があります。</param>
+        public CharacterSet(LabelStyle displayStyle, IReadOnlyList<string> characters)
         {
+            if (characters.Count != 5) throw new ArgumentException("コレクションの要素数は5である必要があります。", nameof(characters));
             this.LabelStyle = displayStyle;
             this.Characters = characters;
         }
