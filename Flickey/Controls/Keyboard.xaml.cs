@@ -26,6 +26,8 @@ namespace Flickey.Controls
         private readonly TimeSpan holdDetectionTimeout = TimeSpan.FromSeconds(0.5);
 
         //  入力操作時のスライド入力とみなされる指の移動量のしきい値。
+        //  この値は可変にしたい。
+        //  キーの横幅であるとか。
         private readonly float distanceThreshold = 64.0f;
 
         private readonly CompositeDisposable disposable = new CompositeDisposable();
@@ -221,7 +223,7 @@ namespace Flickey.Controls
 
         private void OnCharacterReceived(string character)
         {
-            System.Diagnostics.Debug.WriteLine($"CharacterReceived:{character}");
+            System.Diagnostics.Debug.WriteLine($"入力文字:{character}");
 
         }
 

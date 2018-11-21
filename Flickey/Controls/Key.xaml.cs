@@ -179,6 +179,12 @@ namespace Flickey.Controls
                 handler => this.PreviewTouchMove -= handler);
         }
 
+        /// <summary>
+        /// 入力操作を通知するストリームを設定します。
+        /// </summary>
+        /// <param name="input">入力操作の対象と種類を通知・保持するストリーム。</param>
+        /// <param name="pos">指の相対位置を通知・保持するストリーム。</param>
+        /// <param name="sender">入力が確定した文字を送信するコールバック。</param>
         public void SetOperationStreams(ReadOnlyReactiveProperty<(Key key, OperationType type)> type, ReadOnlyReactiveProperty<FingerPos> pos, Action<string> sender)
         {
             //  自分がタップされたとき。
@@ -199,12 +205,10 @@ namespace Flickey.Controls
                 .AddTo(this.disposable);
 
             //  スライド・ホールド操作中に指が動いたとき。
-            pos.Select(p => (type.Value.key, type.Value.type, p))
+            Observable.CombineLatest(type, pos, (t, p) => (t.key, t.type, p))
                 .Where(tuple => tuple.type == OperationType.Slide || tuple.type == OperationType.Hold)
                 .Subscribe(tuple => this.OnFingerPosChanged(tuple.key, tuple.type, tuple.p))
                 .AddTo(this.disposable);
-
-            type.Where(tuple => tuple.type == OperationType.Slide).Subscribe(_ => System.Diagnostics.Debug.WriteLine("すらいど"));
         }
 
         /// <summary>
@@ -215,15 +219,16 @@ namespace Flickey.Controls
             this.disposable.Dispose();
         }
 
+        //  キーボードの種類が変わったとき。
         private static void OnKeyboardTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var key = (Key)d;
         }
 
+        //  タップされたとき。
         private void OnTapped()
         {
             this.KeyEffect = KeyEffect.Focused;
-            System.Diagnostics.Debug.WriteLine($"OnTapped");
         }
 
         //  指が離されたとき。
@@ -234,12 +239,18 @@ namespace Flickey.Controls
 
             //  入力が確定した文字を送信する。
             var grid = this.GetAdjacentGridNums(target, pos);
-            if (grid == (this.Row, this.Column)) sender(target.Characters[(int)this.KeyboardType].Characters[(int)pos]);
+            if (grid == (this.Row, this.Column))
+            {
+                sender(target.Characters[(int)this.KeyboardType].Characters[(int)pos]);
+            }
         }
 
         //  ホールド操作に入ったとき。
         private void OnHolded(Key target)
         {
+            //  とりあえず、ブラー効果をつける。
+            this.KeyEffect = KeyEffect.Blurred;
+
             //  操作対象のキーの持つ文字の配列を取得しておく。
             //  この配列は中央・左・上・右・下の順に文字が格納されていて、
             //  nullのときは、ホールド時のキーを表示させない。
@@ -267,17 +278,18 @@ namespace Flickey.Controls
             //  ホールド操作のとき。
             if (type == OperationType.Hold)
             {
-                var grid = this.GetAdjacentGridNums(target, pos);
-                if (grid == (this.Row, this.Column))
-                    this.KeyEffect = KeyEffect.Focused;
+                var num = target.Characters[(int)target.KeyboardType].Characters.TakeWhile(character => character != null).Count();
+                if ((int)pos < num)
+                {
+                    var grid = this.GetAdjacentGridNums(target, pos);
+                    if (grid == (this.Row, this.Column))
+                        this.KeyEffect = KeyEffect.Focused;
+                }
             }
 
             //  スライド操作のとき。
             else
             {
-                //  なんかおかしいぞ。
-                //  スライド開始直後に呼ばれていない!?
-
                 //  操作対象のキーの持つ文字の配列を取得しておく。
                 var chars = target.Characters[(int)target.KeyboardType].Characters
                 .TakeWhile(character => character != null).ToArray();
@@ -307,34 +319,6 @@ namespace Flickey.Controls
                     target.Shape = KeyShape.Empty;
                 }
             }
-
-            //var grid = this.GetAdjacentGridNums(target, pos);
-            //if (grid == (this.Row, this.Column))
-            //{
-            //    System.Diagnostics.Debug.WriteLine($"target:({target.Row},{target.Column}), type:{type}, pos:{pos}");
-            //    //  スライド操作のとき。
-            //    if (type == OperationType.Slide)
-            //    {
-            //        //  指がニュートラル以外のとき。
-            //        if (pos != FingerPos.Neutral)
-            //        {
-            //            this.Shape = KeyShape.SlideDown + (int)pos - 1;
-            //            target.Shape = KeyShape.Empty;
-            //        }
-
-            //        //  指がニュートラルのとき。
-            //        else
-            //        {
-            //            target.Shape = KeyShape.Normal;
-            //        }
-            //    }
-
-            //    //  ホールド操作のとき。
-            //    else
-            //    {
-            //        this.KeyEffect = KeyEffect.Focused;
-            //    }
-            //}
         }
 
         //  隣接したキーのGridの番号を返す。

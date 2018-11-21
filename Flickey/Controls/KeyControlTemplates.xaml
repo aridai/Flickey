@@ -24,6 +24,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <!-- Key::LabelStyleによって、SecondaryTextを表示したりしなかったりする。 -->
                         <TextBlock Grid.Row="0" Text="{TemplateBinding PrimaryText}" />
                         <TextBlock Grid.Row="1" Text="{TemplateBinding SecondaryText}" />
                     </Grid>
