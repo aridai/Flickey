@@ -24,7 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,7 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ReactiveProperty, Version=5.2.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
@@ -96,20 +96,19 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\KeyboardComponents\FingerRelativePosition.cs" />
-    <Compile Include="Controls\KeyboardComponents\IKeycaps.cs" />
-    <Compile Include="Controls\KeyboardComponents\InputOperationType.cs" />
+    <Compile Include="Controls\KeyboardComponents\FingerPos.cs" />
+    <Compile Include="Controls\KeyboardComponents\OperationType.cs" />
     <Compile Include="Controls\Key.xaml.cs">
       <DependentUpon>Key.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Keyboard.xaml.cs">
       <DependentUpon>Keyboard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\KeyboardComponents\Keycaps.cs" />
+    <Compile Include="Controls\KeyboardComponents\KeyboardType.cs" />
+    <Compile Include="Controls\KeyboardComponents\KeyCharacters.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyEffect.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyShape.cs" />
     <Compile Include="Controls\KeyboardComponents\LabelStyle.cs" />
-    <Compile Include="Controls\KeyboardComponents\KeycapsManager.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

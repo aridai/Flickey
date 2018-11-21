@@ -10,13 +10,13 @@ namespace Flickey.Controls.KeyboardComponents
         Empty,
         Normal,
         SlideLeft,
-        SlideRight,
         SlideUp,
+        SlideRight,
         SlideDown,
         HoldCenter,
         HoldLeft,
-        HoldRight,
         HoldUp,
+        HoldRight,
         HoldDown
     }
 }

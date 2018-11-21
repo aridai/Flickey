@@ -11,6 +11,7 @@ using Reactive.Bindings.Extensions;
 
 namespace Flickey.Controls
 {
+    using System.Windows.Data;
     using KeyboardComponents;
 
     /// <summary>
@@ -44,17 +45,33 @@ namespace Flickey.Controls
         private readonly ReadOnlyReactiveProperty<(Key key, int? deviceId)> inputOperationTarget;
 
         //  入力操作の種類を通知する。
-        private readonly ReadOnlyReactiveProperty<InputOperationType> operationType;
+        private readonly ReadOnlyReactiveProperty<OperationType> operationType;
 
         //  入力操作時の相対的な指の位置を通知する。
         //  具体的な座標ではなく、上下左右などで表される。
-        private readonly ReadOnlyReactiveProperty<RelativeFingerPos> fingerPos;
+        private readonly ReadOnlyReactiveProperty<FingerPos> fingerPos;
+
+        /// <summary>
+        /// KeyboardTypeプロパティの依存関係プロパティ。
+        /// </summary>
+        public static readonly DependencyProperty KeyboardTypeProperty =
+            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.Number));
 
         /// <summary>
         /// 入力確定時に呼ばれるコマンドの依存関係プロパティ。
         /// </summary>
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(Keyboard));
+
+        /// <summary>
+        /// キーボードの種類を取得・設定します。
+        /// 依存関係プロパティです。
+        /// </summary>
+        public KeyboardType KeyboardType
+        {
+            get => (KeyboardType)this.GetValue(KeyboardTypeProperty);
+            set => this.SetValue(KeyboardTypeProperty, value);
+        }
 
         /// <summary>
         /// 入力確定時に呼ばれるコマンド。
@@ -70,9 +87,6 @@ namespace Flickey.Controls
         /// </summary>
         public Keyboard()
         {
-            //  脳死で.AddTo(this.Disposable)をしているけど、ところどころ不要なものもある気がする。
-            //  そこはご愛嬌だが、気が向いたら考え直す。
-
             InitializeComponent();
 
             //  25個のキーを配列に格納する。
@@ -84,6 +98,8 @@ namespace Flickey.Controls
                     var name = $"Key{y}{x}";
                     var key = (Key)this.FindName(name);
                     this.keys[y][x] = key.AddTo(this.disposable);
+
+                    key.SetBinding(Key.KeyboardTypeProperty, new Binding("KeyboardType"));
                 }
             }
 
@@ -138,11 +154,11 @@ namespace Flickey.Controls
                 {
                     if (Math.Abs(vec.X) > this.distanceThreshold || Math.Abs(vec.Y) > this.distanceThreshold)
                     {
-                        if (Math.Abs(vec.X) > Math.Abs(vec.Y)) return (vec.X > 0) ? RelativeFingerPos.Right : RelativeFingerPos.Left;
-                        else return (vec.Y > 0) ? RelativeFingerPos.Bottom : RelativeFingerPos.Top;
+                        if (Math.Abs(vec.X) > Math.Abs(vec.Y)) return (vec.X > 0) ? FingerPos.Right : FingerPos.Left;
+                        else return (vec.Y > 0) ? FingerPos.Bottom : FingerPos.Top;
                     }
 
-                    return RelativeFingerPos.Neutral;
+                    return FingerPos.Neutral;
                 }).Publish();
             fingerPosStream.Connect().AddTo(this.disposable);
 
@@ -150,8 +166,8 @@ namespace Flickey.Controls
 
             //  スライド操作の判定をする。
             var slideOperationDetectionStream = fingerPosStream
-                .Where(pos => pos != RelativeFingerPos.Neutral)
-                .Select(_ => InputOperationType.Slide);
+                .Where(pos => pos != FingerPos.Neutral)
+                .Select(_ => OperationType.Slide);
 
             //  ホールド操作の判定をする。
             //  入力処理が始まって、一定時間後にホールド操作であると判定する。
@@ -162,24 +178,37 @@ namespace Flickey.Controls
                 .Delay(this.holdDetectionTimeout)
                 .ObserveOnDispatcher()
                 .Where(id => id == this.inputOperationTarget.Value.deviceId)
-                .Select(_ => InputOperationType.Hold);
+                .Select(_ => OperationType.Hold);
 
             //  入力操作の種類を通知する。
             this.operationType = Observable.Merge(
-                this.isInputOperationInProgress.Select(value => value ? InputOperationType.Tap : InputOperationType.None),
+                this.isInputOperationInProgress.Select(value => value ? OperationType.Tap : OperationType.None),
                 slideOperationDetectionStream,
                 holdOperationDetectionStream)
                 .Pairwise()
                 .Where(pair =>
-                    !((pair.NewItem == InputOperationType.Slide && pair.OldItem != InputOperationType.Tap)
-                        || (pair.NewItem == InputOperationType.Hold && pair.OldItem != InputOperationType.Tap)))
+                    !((pair.NewItem == OperationType.Slide && pair.OldItem != OperationType.Tap)
+                        || (pair.NewItem == OperationType.Hold && pair.OldItem != OperationType.Tap)))
                 .Select(pair => pair.NewItem)
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this.disposable);
 
-            this.inputOperationTarget.Subscribe(tuple => System.Diagnostics.Debug.WriteLine((tuple.key != null && tuple.deviceId != null) ? $"入力中 キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}" : "非入力中"));
-            this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));
-            this.fingerPos.Subscribe(pos => System.Diagnostics.Debug.WriteLine($"相対位置:{pos}"));
+            //  キーにストリームを渡す。
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    var key = this.keys[y][x];
+                    key.SetOperationStreams(
+                        this.operationType.Select(type => (this.inputOperationTarget.Value.key, type)).ToReadOnlyReactiveProperty().AddTo(this.disposable),
+                        this.fingerPos,
+                        this.OnCharacterReceived);
+                }
+            }
+
+            //this.inputOperationTarget.Subscribe(tuple => System.Diagnostics.Debug.WriteLine((tuple.key != null && tuple.deviceId != null) ? $"入力中 キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}" : "非入力中"));
+            //this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));
+            //this.fingerPos.Subscribe(pos => System.Diagnostics.Debug.WriteLine($"相対位置:{pos}"));
         }
 
         /// <summary>
@@ -188,6 +217,17 @@ namespace Flickey.Controls
         public void Dispose()
         {
             this.disposable.Dispose();
+        }
+
+        private void OnCharacterReceived(string character)
+        {
+            System.Diagnostics.Debug.WriteLine($"CharacterReceived:{character}");
+
+        }
+
+        private void ChangeKeyboardType(KeyboardType type)
+        {
+            //  Key::KeyboardTypeを変更する。
         }
     }
 }
