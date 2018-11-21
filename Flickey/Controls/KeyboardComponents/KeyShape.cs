@@ -1,23 +1,22 @@
 ﻿using System;
 
-namespace Flickey.Controls
+namespace Flickey.Controls.KeyboardComponents
 {
     /// <summary>
     /// キーの形を列挙します。
     /// </summary>
     public enum KeyShape
     {
-        None,
         Empty,
         Normal,
         SlideLeft,
-        SlideRight,
         SlideUp,
+        SlideRight,
         SlideDown,
         HoldCenter,
         HoldLeft,
-        HoldRight,
         HoldUp,
+        HoldRight,
         HoldDown
     }
 }

@@ -17,8 +17,12 @@
                 <ResourceDictionary>
                     <Style TargetType="ctrls:Key">
                         <Style.Triggers>
-                            <Trigger Property="Shape" Value="None">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-None}" />
+                            <Trigger Property="KeyEffect" Value="Blurred">
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <BlurEffect />
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                             <Trigger Property="Shape" Value="Empty">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Empty}" />
@@ -26,32 +30,32 @@
                             <Trigger Property="Shape" Value="Normal">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal}" />
                             </Trigger>
+                            <Trigger Property="Shape" Value="SlideLeft">
+                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Left}" />
+                            </Trigger>
                             <Trigger Property="Shape" Value="SlideUp">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Up}" />
-                            </Trigger>
-                            <Trigger Property="Shape" Value="SlideDown">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Down}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="SlideRight">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Right}" />
                             </Trigger>
-                            <Trigger Property="Shape" Value="SlideLeft">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Left}" />
+                            <Trigger Property="Shape" Value="SlideDown">
+                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Down}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="HoldCenter">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Center}" />
                             </Trigger>
+                            <Trigger Property="Shape" Value="HoldLeft">
+                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Left}" />
+                            </Trigger>
                             <Trigger Property="Shape" Value="HoldUp">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Up}" />
-                            </Trigger>
-                            <Trigger Property="Shape" Value="HoldDown">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Down}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="HoldRight">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Right}" />
                             </Trigger>
-                            <Trigger Property="Shape" Value="HoldLeft">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Left}" />
+                            <Trigger Property="Shape" Value="HoldDown">
+                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Down}" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>

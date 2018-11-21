@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Flickey.Controls
+namespace Flickey.Controls.KeyboardComponents
 {
     /// <summary>
     /// 入力操作の種類を列挙します。
     /// </summary>
-    public enum InputOperationType
+    public enum OperationType
     {
         None,
         Tap,

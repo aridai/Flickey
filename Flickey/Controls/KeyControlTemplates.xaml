@@ -3,79 +3,146 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctrls="clr-namespace:Flickey.Controls">
 
-    <ControlTemplate x:Key="KeyControlTemplate-None" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="None" />
-        </Grid>
-    </ControlTemplate>
-
     <ControlTemplate x:Key="KeyControlTemplate-Normal" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Normal" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Row="1" Grid.Column="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Key::LabelStyleによって、SecondaryTextを表示したりしなかったりする。 -->
+                        <TextBlock Grid.Row="0" Text="{TemplateBinding PrimaryText}" />
+                        <TextBlock Grid.Row="1" Text="{TemplateBinding SecondaryText}" />
+                    </Grid>
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <ControlTemplate x:Key="KeyControlTemplate-Empty" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Empty" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Row="1" Grid.Column="1" Background="Gray" />
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <!-- Slide ここから -->
     <ControlTemplate x:Key="KeyControlTemplate-Slide-Up" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Slide-Up" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <ControlTemplate x:Key="KeyControlTemplate-Slide-Down" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Slide-Down" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <ControlTemplate x:Key="KeyControlTemplate-Slide-Right" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Slide-Right" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <ControlTemplate x:Key="KeyControlTemplate-Slide-Left" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Slide-Left" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
     <!-- Slide ここまで -->
 
     <!-- Hold ここから -->
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Center" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Hold-Center" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Up" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Hold-Up" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Down" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Hold-Down" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Right" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Hold-Right" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
 
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Left" TargetType="ctrls:Key">
-        <Grid>
-            <Button Content="Hold-Left" />
-        </Grid>
+        <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid Focusable="False">
+                <Button>
+                    <TextBlock Text="{TemplateBinding PrimaryText}" />
+                </Button>
+            </Grid>
+        </Label>
     </ControlTemplate>
     <!-- Hold ここまで -->
 
