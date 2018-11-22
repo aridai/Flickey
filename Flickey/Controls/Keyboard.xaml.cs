@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -7,14 +9,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Newtonsoft.Json;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
 namespace Flickey.Controls
 {
-    using System.IO;
     using KeyboardComponents;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Interaction logic for Keyboard.xaml
@@ -264,6 +265,29 @@ namespace Flickey.Controls
                         }
                     }
                 });
+
+            //  それ以外のキーの印字を設定する。
+            this.keys[0][0].CharacterSets = this.CreateSingleCharacterSets("◁");
+            this.keys[0][1].CharacterSets = this.CreateSingleCharacterSets("Home");
+            this.keys[0][2].CharacterSets = this.CreateSingleCharacterSets("Esc");
+            this.keys[0][3].CharacterSets = this.CreateSingleCharacterSets("End");
+            this.keys[0][4].CharacterSets = this.CreateSingleCharacterSets("▷");
+            this.keys[1][0].CharacterSets = this.CreateSingleCharacterSets("Tab");
+            this.keys[1][4].CharacterSets = this.CreateSingleCharacterSets("Del");
+            this.keys[2][0].CharacterSets = this.CreateSingleCharacterSets("☆123");
+            this.keys[3][0].CharacterSets = this.CreateSingleCharacterSets("ABC");
+            this.keys[4][0].CharacterSets = this.CreateSingleCharacterSets("あいう");
+            this.keys[2][4].CharacterSets = this.CreateSingleCharacterSets("Back");
+            this.keys[3][4].CharacterSets = this.CreateSingleCharacterSets("Space");
+            this.keys[4][4].CharacterSets = this.CreateSingleCharacterSets("Enter");
+        }
+
+        //  機能キーの印字を生成する。
+        private IReadOnlyList<CharacterSet> CreateSingleCharacterSets(string label)
+        {
+            return Enumerable.Range(1, 3)
+                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { label, null, null, null, null }))
+                .ToArray();
         }
     }
 }
