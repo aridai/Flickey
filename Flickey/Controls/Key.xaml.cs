@@ -24,6 +24,8 @@ namespace Flickey.Controls
 
         private int? column;
 
+        private KeyboardType keyboardType;
+
         /// <summary>
         /// TouchDownイベントをIObservableへ変換したストリームを取得します。
         /// </summary>
@@ -50,14 +52,22 @@ namespace Flickey.Controls
         public int Column => this.column ?? (int)(this.column = Grid.GetColumn(this));
 
         /// <summary>
+        /// キーボードの種類を取得・設定します。
+        /// </summary>
+        public KeyboardType KeyboardType
+        {
+            get => this.keyboardType;
+            set
+            {
+                this.keyboardType = value;
+                this.Refresh();
+            }
+        }
+
+        /// <summary>
         /// キーボードの文字の集合のコレクションを取得・設定します。
         /// </summary>
         public IReadOnlyList<CharacterSet> CharacterSets { get; set; }
-            = new[]{
-                new CharacterSet(LabelStyle.TwoLines, new[] { "1", "☆", "♪", "→", null }),
-                new CharacterSet(LabelStyle.OneLine, new[] { "A", "B", "C", null, null }),
-                new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { "あ", "い", "う", "え", "お" })
-            };
 
         /// <summary>
         /// 現在選択中のキーボードの文字の集合を取得します。
@@ -93,12 +103,6 @@ namespace Flickey.Controls
         /// </summary>
         public static DependencyProperty SecondaryTextProperty
             = DependencyProperty.Register(nameof(SecondaryText), typeof(string), typeof(Key), new PropertyMetadata(default(string)));
-
-        /// <summary>
-        /// KeyboardTypeプロパティの依存関係プロパティ。
-        /// </summary>
-        public static readonly DependencyProperty KeyboardTypeProperty =
-            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Key), new PropertyMetadata(KeyboardType.Number, OnKeyboardTypeChanged));
 
         /// <summary>
         /// キーの形を取得・設定します。
@@ -148,16 +152,6 @@ namespace Flickey.Controls
         {
             get => (string)this.GetValue(SecondaryTextProperty);
             set => this.SetValue(SecondaryTextProperty, value);
-        }
-
-        /// <summary>
-        /// キーボードの種類を取得・設定します。
-        /// 依存関係プロパティです。
-        /// </summary>
-        public KeyboardType KeyboardType
-        {
-            get => (KeyboardType)this.GetValue(KeyboardTypeProperty);
-            set => this.SetValue(KeyboardTypeProperty, value);
         }
 
         /// <summary>

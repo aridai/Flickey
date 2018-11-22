@@ -60,7 +60,7 @@ namespace Flickey.Controls
         /// KeyboardTypeプロパティの依存関係プロパティ。
         /// </summary>
         public static readonly DependencyProperty KeyboardTypeProperty =
-            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.Number));
+            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.Number, OnKeyboardTypeChanged));
 
         /// <summary>
         /// 入力確定時に呼ばれるコマンドの依存関係プロパティ。
@@ -103,8 +103,6 @@ namespace Flickey.Controls
                     var name = $"Key{y}{x}";
                     var key = (Key)this.FindName(name);
                     this.keys[y][x] = key.AddTo(this.disposable);
-
-                    key.SetBinding(Key.KeyboardTypeProperty, new Binding("KeyboardType"));
                 }
             }
 
@@ -228,14 +226,31 @@ namespace Flickey.Controls
             this.disposable.Dispose();
         }
 
+        private static void OnKeyboardTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var keyboard = (Keyboard)d;
+            var type = (KeyboardType)e.NewValue;
+            
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    var key = keyboard.keys[y][x];
+                    key.KeyboardType = type;
+                }
+            }
+        }
+
         private void OnCharacterReceived(string character)
         {
             System.Diagnostics.Debug.WriteLine($"入力文字:{character}");
-        }
 
-        private void ChangeKeyboardType(KeyboardType type)
-        {
-            //  Key::KeyboardTypeを変更する。
+            switch (character)
+            {
+                case "☆123": this.KeyboardType = KeyboardType.Number; break;
+                case "ABC": this.KeyboardType = KeyboardType.English; break;
+                case "あいう": this.KeyboardType = KeyboardType.Japanese; break;
+            }
         }
 
         //  各キーに文字セットを割り当てる。
@@ -262,7 +277,7 @@ namespace Flickey.Controls
                             var index = (y - 1) * 3 + (x - 1);
                             var key = this.keys[y][x];
 
-                            var sets = Enumerable.Range(0, 2).Select(n => setsArray[n][index]).ToArray();
+                            var sets = Enumerable.Range(0, 3).Select(n => setsArray[n][index]).ToArray();
                             key.CharacterSets = sets;
                         }
                     }
