@@ -77,7 +77,14 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Row="1" Grid.Column="1" Background="Gray" />
+                <Border Grid.Row="1" Grid.Column="1" Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
             </Grid>
         </Label>
     </ControlTemplate>
@@ -128,9 +135,15 @@
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Center" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Border Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="0" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
             </Grid>
         </Label>
     </ControlTemplate>
@@ -138,9 +151,15 @@
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Up" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Border Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="10,10,0,0" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
             </Grid>
         </Label>
     </ControlTemplate>
@@ -148,9 +167,15 @@
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Down" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Border Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="0,0,10,10" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
             </Grid>
         </Label>
     </ControlTemplate>
@@ -158,9 +183,15 @@
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Right" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Border Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="0,10,10,0" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
             </Grid>
         </Label>
     </ControlTemplate>
@@ -168,9 +199,15 @@
     <ControlTemplate x:Key="KeyControlTemplate-Hold-Left" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Border Padding="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="10,0,0,10" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
             </Grid>
         </Label>
     </ControlTemplate>
