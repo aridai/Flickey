@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 
 namespace Flickey.Controls
 {
-    using System.Collections.Generic;
     using KeyboardComponents;
-    using Reactive.Bindings;
-    using Reactive.Bindings.Extensions;
 
     /// <summary>
     /// Interaction logic for Key.xaml
@@ -23,6 +23,8 @@ namespace Flickey.Controls
         private int? raw;
 
         private int? column;
+
+        private KeyboardType keyboardType;
 
         /// <summary>
         /// TouchDownイベントをIObservableへ変換したストリームを取得します。
@@ -50,14 +52,22 @@ namespace Flickey.Controls
         public int Column => this.column ?? (int)(this.column = Grid.GetColumn(this));
 
         /// <summary>
+        /// キーボードの種類を取得・設定します。
+        /// </summary>
+        public KeyboardType KeyboardType
+        {
+            get => this.keyboardType;
+            set
+            {
+                this.keyboardType = value;
+                this.Refresh();
+            }
+        }
+
+        /// <summary>
         /// キーボードの文字の集合のコレクションを取得・設定します。
         /// </summary>
         public IReadOnlyList<CharacterSet> CharacterSets { get; set; }
-            = new[]{
-                new CharacterSet(LabelStyle.TwoLines, new[] { "1", "☆", "♪", "→", null }),
-                new CharacterSet(LabelStyle.OneLine, new[] { "A", "B", "C", null, null }),
-                new CharacterSet(LabelStyle.OnlyFirstCaracter, new[] { "あ", "い", "う", "え", "お" })
-            };
 
         /// <summary>
         /// 現在選択中のキーボードの文字の集合を取得します。
@@ -80,7 +90,7 @@ namespace Flickey.Controls
         /// LabelStyleプロパティの依存関係プロパティ。
         /// </summary>
         public static DependencyProperty LabelStyleProperty
-            = DependencyProperty.Register(nameof(LabelStyle), typeof(LabelStyle), typeof(Key), new PropertyMetadata(LabelStyle.OnlyFirstCaracter));
+            = DependencyProperty.Register(nameof(LabelStyle), typeof(LabelStyle), typeof(Key), new PropertyMetadata(LabelStyle.OnlyFirstCharacter));
 
         /// <summary>
         /// PrimaryTextプロパティの依存関係プロパティ。
@@ -93,12 +103,6 @@ namespace Flickey.Controls
         /// </summary>
         public static DependencyProperty SecondaryTextProperty
             = DependencyProperty.Register(nameof(SecondaryText), typeof(string), typeof(Key), new PropertyMetadata(default(string)));
-
-        /// <summary>
-        /// KeyboardTypeプロパティの依存関係プロパティ。
-        /// </summary>
-        public static readonly DependencyProperty KeyboardTypeProperty =
-            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Key), new PropertyMetadata(KeyboardType.Number, OnKeyboardTypeChanged));
 
         /// <summary>
         /// キーの形を取得・設定します。
@@ -148,16 +152,6 @@ namespace Flickey.Controls
         {
             get => (string)this.GetValue(SecondaryTextProperty);
             set => this.SetValue(SecondaryTextProperty, value);
-        }
-
-        /// <summary>
-        /// キーボードの種類を取得・設定します。
-        /// 依存関係プロパティです。
-        /// </summary>
-        public KeyboardType KeyboardType
-        {
-            get => (KeyboardType)this.GetValue(KeyboardTypeProperty);
-            set => this.SetValue(KeyboardTypeProperty, value);
         }
 
         /// <summary>
@@ -218,6 +212,22 @@ namespace Flickey.Controls
         }
 
         /// <summary>
+        /// キーの印字やエフェクトなどの状態をリフレッシュします。
+        /// </summary>
+        public void Refresh()
+        {
+            //  形をリセットする。
+            this.Shape = KeyShape.Normal;
+            this.KeyEffect = KeyEffect.NoEffect;
+            this.LabelStyle = this.CurrentCharacterSet.LabelStyle;
+
+            //  印字の表示方法に応じて印字を設定する。
+            var chars = this.CurrentCharacterSet.Characters.Where(c => c != null).ToArray();
+            this.PrimaryText = (this.LabelStyle == LabelStyle.OneLine) ? chars.Aggregate(string.Empty, (total, next) => total + next) : chars.First();
+            this.SecondaryText = chars.Skip(1).Aggregate(string.Empty, (total, next) => total + next);
+        }
+
+        /// <summary>
         /// リソースの破棄を行います。
         /// </summary>
         public void Dispose()
@@ -241,7 +251,7 @@ namespace Flickey.Controls
         private void OnInputLeft(Key target, FingerPos pos, Action<string> sender)
         {
             //  印字や形などをリセットする。
-            this.Reset();
+            this.Refresh();
 
             //  入力が確定した文字を送信する。
             var grid = this.GetAdjacentGridNums(target, pos);
@@ -317,7 +327,7 @@ namespace Flickey.Controls
                         }
 
                         //  指がない位置にあるキーならば。
-                        else this.Reset();
+                        else this.Refresh();
                     }
                 }
 
@@ -351,20 +361,6 @@ namespace Flickey.Controls
             //  番号が0から4までに収まっていない場合は(-1,-1)とする。
             if (0 <= grid.row && grid.row < 5 && 0 <= grid.column && grid.column < 5) return grid;
             return (-1, -1);
-        }
-
-        //  キーの印字や形をリセットする。
-        private void Reset()
-        {
-            //  形をリセットする。
-            this.Shape = KeyShape.Normal;
-            this.KeyEffect = KeyEffect.NoEffect;
-            this.LabelStyle = this.CurrentCharacterSet.LabelStyle;
-
-            //  印字の表示方法に応じて印字を設定する。
-            var chars = this.CurrentCharacterSet.Characters.Where(c => c != null).ToArray();
-            this.PrimaryText = (this.LabelStyle == LabelStyle.OneLine) ? chars.Aggregate(string.Empty, (total, next) => total + next) : chars.First();
-            this.SecondaryText = chars.Skip(1).Aggregate(string.Empty, (total, next) => total + next);
         }
     }
 }

@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using Newtonsoft.Json;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
 namespace Flickey.Controls
 {
-    using System.Windows.Data;
     using KeyboardComponents;
 
     /// <summary>
@@ -57,7 +60,7 @@ namespace Flickey.Controls
         /// KeyboardTypeプロパティの依存関係プロパティ。
         /// </summary>
         public static readonly DependencyProperty KeyboardTypeProperty =
-            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.Number));
+            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.Number, OnKeyboardTypeChanged));
 
         /// <summary>
         /// 入力確定時に呼ばれるコマンドの依存関係プロパティ。
@@ -100,8 +103,6 @@ namespace Flickey.Controls
                     var name = $"Key{y}{x}";
                     var key = (Key)this.FindName(name);
                     this.keys[y][x] = key.AddTo(this.disposable);
-
-                    key.SetBinding(Key.KeyboardTypeProperty, new Binding("KeyboardType"));
                 }
             }
 
@@ -195,12 +196,16 @@ namespace Flickey.Controls
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this.disposable);
 
-            //  キーにストリームを渡す。
+            //  キーの印字を設定する。
+            this.SetCharacterSets();
+
+            //  キーにストリームを渡して、状態をリフレッシュさせる。
             for (int y = 0; y < 5; y++)
             {
                 for (int x = 0; x < 5; x++)
                 {
                     var key = this.keys[y][x];
+                    key.Refresh();
                     key.SetOperationStreams(
                         this.operationType.Select(type => (this.inputOperationTarget.Value.key, type)).ToReadOnlyReactiveProperty().AddTo(this.disposable),
                         this.fingerPos,
@@ -221,14 +226,85 @@ namespace Flickey.Controls
             this.disposable.Dispose();
         }
 
+        private static void OnKeyboardTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var keyboard = (Keyboard)d;
+            var type = (KeyboardType)e.NewValue;
+            
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    var key = keyboard.keys[y][x];
+                    key.KeyboardType = type;
+                }
+            }
+        }
+
         private void OnCharacterReceived(string character)
         {
             System.Diagnostics.Debug.WriteLine($"入力文字:{character}");
+
+            switch (character)
+            {
+                case "☆123": this.KeyboardType = KeyboardType.Number; break;
+                case "ABC": this.KeyboardType = KeyboardType.English; break;
+                case "あいう": this.KeyboardType = KeyboardType.Japanese; break;
+            }
         }
 
-        private void ChangeKeyboardType(KeyboardType type)
+        //  各キーに文字セットを割り当てる。
+        private void SetCharacterSets()
         {
-            //  Key::KeyboardTypeを変更する。
+            var fileNames = new[] { "Number.json", "English.json", "Japanese.json" };
+
+            //  エラー時の処理は検討中だが、ダミーデータとして「*」が表示されるデータを流す。
+            var dummy = Enumerable.Range(1, 12)
+                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { "*", null, null, null, null }))
+                .ToArray();
+
+            //  JSONから印字データを読み取り、(1,1)から(3,4)までのキーに設定していく。
+            fileNames.ToObservable()
+                .Select(name => JsonConvert.DeserializeObject<CharacterSet[]>(File.ReadAllText(name)))
+                .OnErrorResumeNext(Observable.Return(dummy))
+                .ToArray()
+                .Subscribe(setsArray =>
+                {
+                    for (var y = 1; y <= 4; y++)
+                    {
+                        for (var x = 1; x <= 3; x++)
+                        {
+                            var index = (y - 1) * 3 + (x - 1);
+                            var key = this.keys[y][x];
+
+                            var sets = Enumerable.Range(0, 3).Select(n => setsArray[n][index]).ToArray();
+                            key.CharacterSets = sets;
+                        }
+                    }
+                });
+
+            //  それ以外のキーの印字を設定する。
+            this.keys[0][0].CharacterSets = this.CreateSingleCharacterSets("◁");
+            this.keys[0][1].CharacterSets = this.CreateSingleCharacterSets("Home");
+            this.keys[0][2].CharacterSets = this.CreateSingleCharacterSets("Esc");
+            this.keys[0][3].CharacterSets = this.CreateSingleCharacterSets("End");
+            this.keys[0][4].CharacterSets = this.CreateSingleCharacterSets("▷");
+            this.keys[1][0].CharacterSets = this.CreateSingleCharacterSets("Tab");
+            this.keys[1][4].CharacterSets = this.CreateSingleCharacterSets("Del");
+            this.keys[2][0].CharacterSets = this.CreateSingleCharacterSets("☆123");
+            this.keys[3][0].CharacterSets = this.CreateSingleCharacterSets("ABC");
+            this.keys[4][0].CharacterSets = this.CreateSingleCharacterSets("あいう");
+            this.keys[2][4].CharacterSets = this.CreateSingleCharacterSets("Back");
+            this.keys[3][4].CharacterSets = this.CreateSingleCharacterSets("Space");
+            this.keys[4][4].CharacterSets = this.CreateSingleCharacterSets("Enter");
+        }
+
+        //  機能キーの印字を生成する。
+        private IReadOnlyList<CharacterSet> CreateSingleCharacterSets(string label)
+        {
+            return Enumerable.Range(1, 3)
+                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { label, null, null, null, null }))
+                .ToArray();
         }
     }
 }

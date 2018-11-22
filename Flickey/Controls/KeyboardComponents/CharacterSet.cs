@@ -1,22 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Flickey.Controls.KeyboardComponents
 {
     /// <summary>
     /// キーが持つ文字の集合を提供します。
     /// </summary>
+    [DataContract]
     public struct CharacterSet
     {
         /// <summary>
         /// 印字の表示方法を指定します。
         /// </summary>
-        public LabelStyle LabelStyle { get; }
+        [DataMember(Name = "style")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public LabelStyle LabelStyle { get; set; }
 
         /// <summary>
         /// キーが持つ文字のコレクション。
         /// </summary>
-        public IReadOnlyList<string> Characters { get; }
+        [DataMember(Name = "characters")]
+        public IReadOnlyList<string> Characters { get; set; }
 
         /// <summary>
         /// インスタンスを生成して初期化します。
