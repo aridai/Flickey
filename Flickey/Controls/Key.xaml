@@ -8,22 +8,6 @@
     mc:Ignorable="d"
     d:DesignWidth="64"
     d:DesignHeight="64">
-    
-    <UserControl.Background>
-        <SolidColorBrush>
-            <SolidColorBrush.Color>
-                <Color R="97"  G="100" B="105" A="255"/>
-            </SolidColorBrush.Color>
-        </SolidColorBrush>
-    </UserControl.Background>
-
-    <UserControl.Foreground>
-        <SolidColorBrush>
-            <SolidColorBrush.Color>
-                <Color R="255"  G="255" B="255" A="255"/>
-            </SolidColorBrush.Color>
-        </SolidColorBrush>
-    </UserControl.Foreground>
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -32,7 +16,24 @@
 
                 <ResourceDictionary>
                     <Style TargetType="ctrls:Key">
+                        <Style.Setters>
+                            <!-- とりあえず色の設定もSetter上でやってします。
+                            さもないと、KeyEffect.Focusedのときに、TriggerでBackgroundを変更しても、
+                            優先度が低いため、色が変わらない。 -->
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush>
+                                        <SolidColorBrush.Color>
+                                            <Color R="97" G="100" B="105" A="255" />
+                                        </SolidColorBrush.Color>
+                                    </SolidColorBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="White" />
+                        </Style.Setters>
                         <Style.Triggers>
+                            
+                            <!-- 印字を表示する行数によって切り替える。 -->
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="Shape" Value="Normal" />
@@ -60,6 +61,18 @@
                                     <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal}" />
                                 </MultiTrigger.Setters>
                             </MultiTrigger>
+
+                            <Trigger Property="KeyEffect" Value="Focused">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush>
+                                            <SolidColorBrush.Color>
+                                                <Color R="0" G="122" B="255" A="255" />
+                                            </SolidColorBrush.Color>
+                                        </SolidColorBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
                             <Trigger Property="KeyEffect" Value="Blurred">
                                 <Setter Property="Effect">
                                     <Setter.Value>

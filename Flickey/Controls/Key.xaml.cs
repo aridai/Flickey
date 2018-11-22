@@ -235,12 +235,6 @@ namespace Flickey.Controls
             this.disposable.Dispose();
         }
 
-        //  キーボードの種類が変わったとき。
-        private static void OnKeyboardTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var key = (Key)d;
-        }
-
         //  タップされたとき。
         private void OnTapped()
         {
@@ -291,6 +285,8 @@ namespace Flickey.Controls
         //  指が動いたとき。
         private void OnFingerPosChanged(Key target, OperationType type, FingerPos pos)
         {
+            this.KeyEffect = KeyEffect.NoEffect;
+
             //  ホールド操作のとき。
             if (type == OperationType.Hold)
             {
