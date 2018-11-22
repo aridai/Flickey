@@ -198,20 +198,22 @@ namespace Flickey.Controls
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this.disposable);
 
-            //  キーにストリームを渡す。
+            //  キーの印字を設定する。
+            this.SetCharacterSets();
+
+            //  キーにストリームを渡して、状態をリフレッシュさせる。
             for (int y = 0; y < 5; y++)
             {
                 for (int x = 0; x < 5; x++)
                 {
                     var key = this.keys[y][x];
+                    key.Refresh();
                     key.SetOperationStreams(
                         this.operationType.Select(type => (this.inputOperationTarget.Value.key, type)).ToReadOnlyReactiveProperty().AddTo(this.disposable),
                         this.fingerPos,
                         this.OnCharacterReceived);
                 }
             }
-
-            this.SetCharacterSets();
 
             //this.inputOperationTarget.Subscribe(tuple => System.Diagnostics.Debug.WriteLine((tuple.key != null && tuple.deviceId != null) ? $"入力中 キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}" : "非入力中"));
             //this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));

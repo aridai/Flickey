@@ -218,6 +218,22 @@ namespace Flickey.Controls
         }
 
         /// <summary>
+        /// キーの印字やエフェクトなどの状態をリフレッシュします。
+        /// </summary>
+        public void Refresh()
+        {
+            //  形をリセットする。
+            this.Shape = KeyShape.Normal;
+            this.KeyEffect = KeyEffect.NoEffect;
+            this.LabelStyle = this.CurrentCharacterSet.LabelStyle;
+
+            //  印字の表示方法に応じて印字を設定する。
+            var chars = this.CurrentCharacterSet.Characters.Where(c => c != null).ToArray();
+            this.PrimaryText = (this.LabelStyle == LabelStyle.OneLine) ? chars.Aggregate(string.Empty, (total, next) => total + next) : chars.First();
+            this.SecondaryText = chars.Skip(1).Aggregate(string.Empty, (total, next) => total + next);
+        }
+
+        /// <summary>
         /// リソースの破棄を行います。
         /// </summary>
         public void Dispose()
@@ -241,7 +257,7 @@ namespace Flickey.Controls
         private void OnInputLeft(Key target, FingerPos pos, Action<string> sender)
         {
             //  印字や形などをリセットする。
-            this.Reset();
+            this.Refresh();
 
             //  入力が確定した文字を送信する。
             var grid = this.GetAdjacentGridNums(target, pos);
@@ -317,7 +333,7 @@ namespace Flickey.Controls
                         }
 
                         //  指がない位置にあるキーならば。
-                        else this.Reset();
+                        else this.Refresh();
                     }
                 }
 
@@ -351,20 +367,6 @@ namespace Flickey.Controls
             //  番号が0から4までに収まっていない場合は(-1,-1)とする。
             if (0 <= grid.row && grid.row < 5 && 0 <= grid.column && grid.column < 5) return grid;
             return (-1, -1);
-        }
-
-        //  キーの印字や形をリセットする。
-        private void Reset()
-        {
-            //  形をリセットする。
-            this.Shape = KeyShape.Normal;
-            this.KeyEffect = KeyEffect.NoEffect;
-            this.LabelStyle = this.CurrentCharacterSet.LabelStyle;
-
-            //  印字の表示方法に応じて印字を設定する。
-            var chars = this.CurrentCharacterSet.Characters.Where(c => c != null).ToArray();
-            this.PrimaryText = (this.LabelStyle == LabelStyle.OneLine) ? chars.Aggregate(string.Empty, (total, next) => total + next) : chars.First();
-            this.SecondaryText = chars.Skip(1).Aggregate(string.Empty, (total, next) => total + next);
         }
     }
 }
