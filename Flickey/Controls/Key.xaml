@@ -8,6 +8,22 @@
     mc:Ignorable="d"
     d:DesignWidth="64"
     d:DesignHeight="64">
+    
+    <UserControl.Background>
+        <SolidColorBrush>
+            <SolidColorBrush.Color>
+                <Color R="97"  G="100" B="105" A="255"/>
+            </SolidColorBrush.Color>
+        </SolidColorBrush>
+    </UserControl.Background>
+
+    <UserControl.Foreground>
+        <SolidColorBrush>
+            <SolidColorBrush.Color>
+                <Color R="255"  G="255" B="255" A="255"/>
+            </SolidColorBrush.Color>
+        </SolidColorBrush>
+    </UserControl.Foreground>
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -17,6 +33,33 @@
                 <ResourceDictionary>
                     <Style TargetType="ctrls:Key">
                         <Style.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Shape" Value="Normal" />
+                                    <Condition Property="LabelStyle" Value="TwoLines" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal-TwoLines}" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Shape" Value="Normal" />
+                                    <Condition Property="LabelStyle" Value="OneLine" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal}" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Shape" Value="Normal" />
+                                    <Condition Property="LabelStyle" Value="OnlyFirstCharacter" />
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.Setters>
+                                    <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal}" />
+                                </MultiTrigger.Setters>
+                            </MultiTrigger>
                             <Trigger Property="KeyEffect" Value="Blurred">
                                 <Setter Property="Effect">
                                     <Setter.Value>
@@ -24,11 +67,11 @@
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
+                            
                             <Trigger Property="Shape" Value="Empty">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Empty}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="Normal">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="SlideLeft">
                                 <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Left}" />
