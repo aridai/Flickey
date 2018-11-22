@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 
 namespace Flickey.Controls
 {
-    using System.Collections.Generic;
     using KeyboardComponents;
-    using Reactive.Bindings;
-    using Reactive.Bindings.Extensions;
 
     /// <summary>
     /// Interaction logic for Key.xaml
@@ -56,7 +56,7 @@ namespace Flickey.Controls
             = new[]{
                 new CharacterSet(LabelStyle.TwoLines, new[] { "1", "☆", "♪", "→", null }),
                 new CharacterSet(LabelStyle.OneLine, new[] { "A", "B", "C", null, null }),
-                new CharacterSet(LabelStyle.OnlyFirstCaracter, new[] { "あ", "い", "う", "え", "お" })
+                new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { "あ", "い", "う", "え", "お" })
             };
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Flickey.Controls
         /// LabelStyleプロパティの依存関係プロパティ。
         /// </summary>
         public static DependencyProperty LabelStyleProperty
-            = DependencyProperty.Register(nameof(LabelStyle), typeof(LabelStyle), typeof(Key), new PropertyMetadata(LabelStyle.OnlyFirstCaracter));
+            = DependencyProperty.Register(nameof(LabelStyle), typeof(LabelStyle), typeof(Key), new PropertyMetadata(LabelStyle.OnlyFirstCharacter));
 
         /// <summary>
         /// PrimaryTextプロパティの依存関係プロパティ。

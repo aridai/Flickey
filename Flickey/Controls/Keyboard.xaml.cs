@@ -5,14 +5,16 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
 namespace Flickey.Controls
 {
-    using System.Windows.Data;
+    using System.IO;
     using KeyboardComponents;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Interaction logic for Keyboard.xaml
@@ -208,6 +210,8 @@ namespace Flickey.Controls
                 }
             }
 
+            this.SetCharacterSets();
+
             //this.inputOperationTarget.Subscribe(tuple => System.Diagnostics.Debug.WriteLine((tuple.key != null && tuple.deviceId != null) ? $"入力中 キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}" : "非入力中"));
             //this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));
             //this.fingerPos.Subscribe(pos => System.Diagnostics.Debug.WriteLine($"相対位置:{pos}"));
@@ -229,6 +233,37 @@ namespace Flickey.Controls
         private void ChangeKeyboardType(KeyboardType type)
         {
             //  Key::KeyboardTypeを変更する。
+        }
+
+        //  各キーに文字セットを割り当てる。
+        private void SetCharacterSets()
+        {
+            var fileNames = new[] { "Number.json", "English.json", "Japanese.json" };
+
+            //  エラー時の処理は検討中だが、ダミーデータとして「*」が表示されるデータを流す。
+            var dummy = Enumerable.Range(1, 12)
+                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { "*", null, null, null, null }))
+                .ToArray();
+
+            //  JSONから印字データを読み取り、(1,1)から(3,4)までのキーに設定していく。
+            fileNames.ToObservable()
+                .Select(name => JsonConvert.DeserializeObject<CharacterSet[]>(File.ReadAllText(name)))
+                .OnErrorResumeNext(Observable.Return(dummy))
+                .ToArray()
+                .Subscribe(setsArray =>
+                {
+                    for (var y = 1; y <= 4; y++)
+                    {
+                        for (var x = 1; x <= 3; x++)
+                        {
+                            var index = (y - 1) * 3 + (x - 1);
+                            var key = this.keys[y][x];
+
+                            var sets = Enumerable.Range(0, 2).Select(n => setsArray[n][index]).ToArray();
+                            key.CharacterSets = sets;
+                        }
+                    }
+                });
         }
     }
 }
