@@ -323,6 +323,7 @@ namespace Flickey.Controls
                         {
                             this.Shape = KeyShape.Normal + i;
                             this.PrimaryText = chars[i];
+                            this.KeyEffect = KeyEffect.Focused;
                         }
 
                         //  指がない位置にあるキーならば。
