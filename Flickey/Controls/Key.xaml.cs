@@ -285,15 +285,18 @@ namespace Flickey.Controls
         //  指が動いたとき。
         private void OnFingerPosChanged(Key target, OperationType type, FingerPos pos)
         {
-            this.KeyEffect = KeyEffect.NoEffect;
-
             //  ホールド操作のとき。
             if (type == OperationType.Hold)
             {
+                //  ポップ表示対象外は弾く。
+                if (this.Shape < KeyShape.HoldCenter) return;
+
+                this.KeyEffect = KeyEffect.NoEffect;
+
                 var num = target.CurrentCharacterSet.Characters.TakeWhile(character => character != null).Count();
                 if ((int)pos < num)
                 {
-                    //  指の位置にあるキーの形を変更する。
+                    //  指の位置にあるキーをフォーカスする。
                     var grid = this.GetAdjacentGridNums(target, pos);
                     if (grid == (this.Row, this.Column))
                         this.KeyEffect = KeyEffect.Focused;
