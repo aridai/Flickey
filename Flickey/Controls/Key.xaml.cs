@@ -24,7 +24,7 @@ namespace Flickey.Controls
 
         private int? column;
 
-        private KeyboardType keyboardType;
+        private KeyboardType keyboardType = KeyboardType.English;
 
         /// <summary>
         /// TouchDownイベントをIObservableへ変換したストリームを取得します。
@@ -235,12 +235,6 @@ namespace Flickey.Controls
             this.disposable.Dispose();
         }
 
-        //  キーボードの種類が変わったとき。
-        private static void OnKeyboardTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var key = (Key)d;
-        }
-
         //  タップされたとき。
         private void OnTapped()
         {
@@ -294,10 +288,15 @@ namespace Flickey.Controls
             //  ホールド操作のとき。
             if (type == OperationType.Hold)
             {
+                //  ポップ表示対象外は弾く。
+                if (this.Shape < KeyShape.HoldCenter) return;
+
+                this.KeyEffect = KeyEffect.NoEffect;
+
                 var num = target.CurrentCharacterSet.Characters.TakeWhile(character => character != null).Count();
                 if ((int)pos < num)
                 {
-                    //  指の位置にあるキーの形を変更する。
+                    //  指の位置にあるキーをフォーカスする。
                     var grid = this.GetAdjacentGridNums(target, pos);
                     if (grid == (this.Row, this.Column))
                         this.KeyEffect = KeyEffect.Focused;
@@ -324,6 +323,7 @@ namespace Flickey.Controls
                         {
                             this.Shape = KeyShape.Normal + i;
                             this.PrimaryText = chars[i];
+                            this.KeyEffect = KeyEffect.Focused;
                         }
 
                         //  指がない位置にあるキーならば。

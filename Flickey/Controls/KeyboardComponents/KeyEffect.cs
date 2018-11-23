@@ -18,7 +18,7 @@ namespace Flickey.Controls.KeyboardComponents
         Tapped,
 
         /// <summary>
-        /// ホールド操作でフォーカスが当てられたときの効果です。
+        /// フォーカスが当てられたときの効果です。
         /// </summary>
         Focused,
 
