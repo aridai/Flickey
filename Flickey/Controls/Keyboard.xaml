@@ -8,6 +8,14 @@
     mc:Ignorable="d"
     Stylus.IsPressAndHoldEnabled="False">
 
+    <UserControl.Background>
+        <SolidColorBrush>
+            <SolidColorBrush.Color>
+                <Color R="30" G="35" B="39" A="255" />
+            </SolidColorBrush.Color>
+        </SolidColorBrush>
+    </UserControl.Background>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

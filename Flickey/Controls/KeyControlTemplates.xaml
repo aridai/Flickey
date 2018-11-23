@@ -108,7 +108,7 @@
                     </Label>
                 </Border>
                 <Viewbox Grid.Row="1" Stretch="Fill" HorizontalAlignment="Center">
-                    <Polygon Margin="1" Points="0,0 60,0 30,60" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
+                    <Polygon Points="0,0 60,0 30,60" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
                 </Viewbox>
             </Grid>
         </Label>
@@ -123,7 +123,7 @@
                 </Grid.RowDefinitions>
 
                 <Viewbox Grid.Row="0" Stretch="Fill" HorizontalAlignment="Center">
-                    <Polygon Margin="1" Points="30,0 0,60 60,60" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
+                    <Polygon Points="30,0 0,60 60,60" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
                 </Viewbox>
                 <Border Grid.Row="1" Padding="5" BorderThickness="0" CornerRadius="0,0,10,10" BorderBrush="{TemplateBinding Background}" Background="{TemplateBinding Background}">
                     <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
@@ -147,7 +147,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Viewbox Grid.Column="0" Stretch="Fill" HorizontalAlignment="Center">
-                    <Polygon Margin="1" Points="30,0 30,60 0,30" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
+                    <Polygon Points="30,0 30,60 0,30" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
                 </Viewbox>
                 <Border Grid.Column="1" Padding="5" BorderThickness="0" CornerRadius="0,10,10,0" BorderBrush="{TemplateBinding Background}" Background="{TemplateBinding Background}">
                     <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
@@ -180,7 +180,7 @@
                     </Label>
                 </Border>
                 <Viewbox Grid.Column="1" Stretch="Fill" HorizontalAlignment="Center">
-                    <Polygon Margin="1" Points="0,0 0,60 60,30" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
+                    <Polygon Points="0,0 0,60 60,30" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
                 </Viewbox>
             </Grid>
         </Label>
