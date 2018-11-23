@@ -24,7 +24,7 @@ namespace Flickey.Controls
 
         private int? column;
 
-        private KeyboardType keyboardType;
+        private KeyboardType keyboardType = KeyboardType.English;
 
         /// <summary>
         /// TouchDownイベントをIObservableへ変換したストリームを取得します。

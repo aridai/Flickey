@@ -93,9 +93,23 @@
     <ControlTemplate x:Key="KeyControlTemplate-Slide-Up" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Padding="5" BorderThickness="0" CornerRadius="10,10,0,0" BorderBrush="{TemplateBinding Background}" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
+                <Viewbox Grid.Row="1" Stretch="Fill" HorizontalAlignment="Center">
+                    <Polygon Margin="1" Points="0,0 60,0 30,60" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
+                </Viewbox>
             </Grid>
         </Label>
     </ControlTemplate>
@@ -103,9 +117,23 @@
     <ControlTemplate x:Key="KeyControlTemplate-Slide-Down" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="5*" />
+                </Grid.RowDefinitions>
+
+                <Viewbox Grid.Row="0" Stretch="Fill" HorizontalAlignment="Center">
+                    <Polygon Margin="1" Points="30,0 0,60 60,60" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
+                </Viewbox>
+                <Border Grid.Row="1" Padding="5" BorderThickness="0" CornerRadius="0,0,10,10" BorderBrush="{TemplateBinding Background}" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
             </Grid>
         </Label>
     </ControlTemplate>
@@ -113,9 +141,23 @@
     <ControlTemplate x:Key="KeyControlTemplate-Slide-Right" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="5*" />
+                </Grid.ColumnDefinitions>
+
+                <Viewbox Grid.Column="0" Stretch="Fill" HorizontalAlignment="Center">
+                    <Polygon Margin="1" Points="30,0 30,60 0,30" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
+                </Viewbox>
+                <Border Grid.Column="1" Padding="5" BorderThickness="0" CornerRadius="0,10,10,0" BorderBrush="{TemplateBinding Background}" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
             </Grid>
         </Label>
     </ControlTemplate>
@@ -123,9 +165,23 @@
     <ControlTemplate x:Key="KeyControlTemplate-Slide-Left" TargetType="ctrls:Key">
         <Label Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid Focusable="False">
-                <Button>
-                    <TextBlock Text="{TemplateBinding PrimaryText}" />
-                </Button>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Padding="5" BorderThickness="0" CornerRadius="10,0,0,10" BorderBrush="{TemplateBinding Background}" Background="{TemplateBinding Background}">
+                    <Label HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{TemplateBinding Background}">
+                        <Viewbox>
+                            <Grid>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding PrimaryText}" />
+                            </Grid>
+                        </Viewbox>
+                    </Label>
+                </Border>
+                <Viewbox Grid.Column="1" Stretch="Fill" HorizontalAlignment="Center">
+                    <Polygon Margin="1" Points="0,0 0,60 60,30" StrokeThickness="0" Stroke="{TemplateBinding Background}" Fill="{TemplateBinding Background}" />
+                </Viewbox>
             </Grid>
         </Label>
     </ControlTemplate>
