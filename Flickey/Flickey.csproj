@@ -53,6 +53,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.1.0\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
@@ -113,6 +114,15 @@
     <Compile Include="Controls\KeyboardComponents\KeyEffect.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyShape.cs" />
     <Compile Include="Controls\KeyboardComponents\LabelStyle.cs" />
+    <Compile Include="Models\PInvokeComponents\GUITHREADINFO.cs" />
+    <Compile Include="Models\PInvokeComponents\HARDWAREINPUT.cs" />
+    <Compile Include="Models\PInvokeComponents\INPUT.cs" />
+    <Compile Include="Models\PInvokeComponents\InputType.cs" />
+    <Compile Include="Models\PInvokeComponents\KEYBDINPUT.cs" />
+    <Compile Include="Models\PInvokeComponents\KeyboardInputFlag.cs" />
+    <Compile Include="Models\PInvokeComponents\MOUSEINPUT.cs" />
+    <Compile Include="Models\PInvokeComponents\PInvokeFunctions.cs" />
+    <Compile Include="Models\PInvokeComponents\WindowMessage.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -163,7 +173,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
