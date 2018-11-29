@@ -10,7 +10,10 @@
     mc:Ignorable="d"
     Title="Flickey"
     Width="450"
-    Height="400">
+    Height="400"
+    Focusable="False"
+    ShowActivated="False"
+    Topmost="True">
 
     <i:Interaction.Behaviors>
         <behaviors:MainWindowSetupBehavior />
