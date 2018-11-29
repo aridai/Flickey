@@ -4,11 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:ctrls="clr-namespace:Flickey.Controls"
+    xmlns:behaviors="clr-namespace:Flickey.Behaviors"
     mc:Ignorable="d"
     Title="Flickey"
     Width="450"
     Height="400">
+
+    <i:Interaction.Behaviors>
+        <behaviors:MainWindowSetupBehavior />
+    </i:Interaction.Behaviors>
 
     <Grid>
         <Grid.RowDefinitions>
