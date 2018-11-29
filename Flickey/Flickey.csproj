@@ -122,6 +122,8 @@
     <Compile Include="Models\PInvokeComponents\KeyboardInputFlag.cs" />
     <Compile Include="Models\PInvokeComponents\MOUSEINPUT.cs" />
     <Compile Include="Models\PInvokeComponents\PInvokeFunctions.cs" />
+    <Compile Include="Models\PInvokeComponents\WindowLongOffset.cs" />
+    <Compile Include="Models\PInvokeComponents\WindowPosFlags.cs" />
     <Compile Include="Models\PInvokeComponents\WindowMessage.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

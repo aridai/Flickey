@@ -45,5 +45,38 @@ namespace Flickey.Models.PInvokeComponents
         /// <returns>関数が成功すると既定のウィンドウハンドルが返ります。失敗するとNULLが返ります。</returns>
         [DllImport("imm32.dll")]
         public static extern IntPtr ImmGetDefaultIMEWnd(IntPtr hWnd);
+
+        /// <summary>
+        /// 指定されたウィンドウに関する情報を取得します。
+        /// </summary>
+        /// <param name="hWnd">対象のウィンドウハンドルを指定します。</param>
+        /// <param name="index">取得する値のオフセットを指定します。</param>
+        /// <returns>関数が成功すると要求したデータが返ります。失敗すると0が返ります。</returns>
+        [DllImport("user32.dll")]
+        public static extern uint GetWindowLong(IntPtr hWnd, WindowLongOffset index);
+
+        /// <summary>
+        /// 指定されたウィンドウの属性を変更します。
+        /// </summary>
+        /// <param name="hWnd">対象のウィンドウハンドルを指定します。</param>
+        /// <param name="index">設定する値のオフセットを指定します。</param>
+        /// <param name="newValue">設定する値。</param>
+        /// <returns>関数が成功すると設定前の値が返ります。失敗すると0が返ります。</returns>
+        [DllImport("user32.dll")]
+        public static extern uint SetWindowLong(IntPtr hWnd, WindowLongOffset index, uint newValue);
+
+        /// <summary>
+        /// ウィンドウの位置などを設定します。
+        /// </summary>
+        /// <param name="hWnd">対象のウィンドウハンドルを指定します。</param>
+        /// <param name="hWndInsertAfter">Zオーダを決めるためのウィンドウハンドルを指定します。</param>
+        /// <param name="x">ウィンドウの左上端の新しいX座標をクライアント座標で指定します。</param>
+        /// <param name="y">ウィンドウの左上端の新しいY座標をクライアント座標で指定します。</param>
+        /// <param name="width">ウィンドウの新しい幅をピクセル単位で指定します。</param>
+        /// <param name="height">ウィンドウの新しい高さをピクセル単位で指定します。</param>
+        /// <param name="flags">ウィンドウのサイズと位置の変更に関するフラグを指定します。</param>
+        /// <returns>関数が成功すると0以外の値が返ります。失敗すると0が返ります。</returns>
+        [DllImport("user32.dll")]
+        public static extern uint SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int width, int height, WindowPosFlags flags);
     }
 }
