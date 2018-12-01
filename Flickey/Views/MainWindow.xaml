@@ -18,6 +18,7 @@
 
     <i:Interaction.Behaviors>
         <behaviors:MainWindowSetupBehavior />
+        <behaviors:MainWindowViewModelDisposeBehavior />
     </i:Interaction.Behaviors>
 
     <Window.DataContext>

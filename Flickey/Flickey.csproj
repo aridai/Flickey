@@ -118,6 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Behaviors\MainWindowSetupBehavior.cs" />
+    <Compile Include="Behaviors\MainWindowViewModelDisposeBehavior.cs" />
     <Compile Include="Controls\KeyboardComponents\FingerPos.cs" />
     <Compile Include="Controls\KeyboardComponents\OperationType.cs" />
     <Compile Include="Controls\Key.xaml.cs">

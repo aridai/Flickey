@@ -90,7 +90,7 @@ namespace Flickey.Models
         /// 文字列を直接入力します。
         /// 現在のIMEの入力モードに依存せず、また、日本語も直接入力で入力します。
         /// </summary>
-        /// <param name="str"></param>
+        /// <param name="str">入力する文字列。</param>
         public static void InputDirectly(string str)
         {
             var length = str.Length;
