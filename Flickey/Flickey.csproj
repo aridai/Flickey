@@ -133,6 +133,8 @@
     <Compile Include="Controls\KeyboardComponents\KeyShape.cs" />
     <Compile Include="Controls\KeyboardComponents\LabelStyle.cs" />
     <Compile Include="Models\InputMode.cs" />
+    <Compile Include="Models\KeyMapping.cs" />
+    <Compile Include="Models\Inputter.cs" />
     <Compile Include="Models\KeyboardOperator.cs" />
     <Compile Include="Models\PInvokeComponents\GUITHREADINFO.cs" />
     <Compile Include="Models\PInvokeComponents\HARDWAREINPUT.cs" />

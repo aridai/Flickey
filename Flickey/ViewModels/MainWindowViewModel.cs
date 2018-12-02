@@ -16,6 +16,8 @@ namespace Flickey.ViewModels
     /// </summary>
     public sealed class MainWindowViewModel : BindableBase, IDisposable
     {
+        private readonly Inputter inputter = new Inputter();
+
         private readonly CompositeDisposable disposable = new CompositeDisposable();
 
         private readonly ReadOnlyReactiveProperty<InputMode> imeModeProperty;
@@ -44,8 +46,10 @@ namespace Flickey.ViewModels
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this.disposable);
 
-            commandSubject.Subscribe(c => System.Diagnostics.Debug.WriteLine($"入力文字:{c}"));
-            imeModeProperty.Subscribe(m => System.Diagnostics.Debug.WriteLine($"IMEモード:{m}"));
+            commandSubject.Subscribe(character => this.inputter.Input(character)).AddTo(this.disposable);
+
+            //commandSubject.Subscribe(c => System.Diagnostics.Debug.WriteLine($"入力文字:{c}")).AddTo(this.disposable);
+            //imeModeProperty.Subscribe(m => System.Diagnostics.Debug.WriteLine($"IMEモード:{m}")).AddTo(this.disposable);
         }
 
         /// <summary>

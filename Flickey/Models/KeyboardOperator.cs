@@ -36,8 +36,8 @@ namespace Flickey.Models
             var value2 = PInvokeFunctions.SendMessage(imeWnd, 0x0283, 0x0005, 0);
 
             if (value1 == 0) return InputMode.Disabled;
-            if (value2 == 1) return InputMode.JapaneseInput;
-            if (value2 == 0) return InputMode.DirectInput;
+            if (value2 == 1) return InputMode.Japanese;
+            if (value2 == 0) return InputMode.Direct;
             return InputMode.Unknown;
         }
 
