@@ -78,5 +78,14 @@ namespace Flickey.Models.PInvokeComponents
         /// <returns>関数が成功すると0以外の値が返ります。失敗すると0が返ります。</returns>
         [DllImport("user32.dll")]
         public static extern uint SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int width, int height, WindowPosFlags flags);
+
+        /// <summary>
+        /// 仮想キーコードとスキャンコードを相互変換します。
+        /// </summary>
+        /// <param name="uCode">仮想キーコードまたはスキャンコード。</param>
+        /// <param name="uMapType">0を指定すると仮想キーコードからスキャンコードへ、1を指定するとその逆の変換を行います。</param>
+        /// <returns>関数が成功すると仮想キーコードまたはスキャンコードを返します。失敗すると0を返します。</returns>
+        [DllImport("user32.dll")]
+        public static extern uint MapVirtualKey(uint uCode, uint uMapType);
     }
 }

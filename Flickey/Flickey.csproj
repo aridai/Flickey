@@ -118,6 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Behaviors\MainWindowSetupBehavior.cs" />
+    <Compile Include="Behaviors\MainWindowViewModelDisposeBehavior.cs" />
     <Compile Include="Controls\KeyboardComponents\FingerPos.cs" />
     <Compile Include="Controls\KeyboardComponents\OperationType.cs" />
     <Compile Include="Controls\Key.xaml.cs">
@@ -131,6 +132,10 @@
     <Compile Include="Controls\KeyboardComponents\KeyEffect.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyShape.cs" />
     <Compile Include="Controls\KeyboardComponents\LabelStyle.cs" />
+    <Compile Include="Models\InputMode.cs" />
+    <Compile Include="Models\KeyMapping.cs" />
+    <Compile Include="Models\Inputter.cs" />
+    <Compile Include="Models\KeyboardOperator.cs" />
     <Compile Include="Models\PInvokeComponents\GUITHREADINFO.cs" />
     <Compile Include="Models\PInvokeComponents\HARDWAREINPUT.cs" />
     <Compile Include="Models\PInvokeComponents\INPUT.cs" />
@@ -142,6 +147,8 @@
     <Compile Include="Models\PInvokeComponents\WindowLongOffset.cs" />
     <Compile Include="Models\PInvokeComponents\WindowPosFlags.cs" />
     <Compile Include="Models\PInvokeComponents\WindowMessage.cs" />
+    <Compile Include="Models\VirtualKeyCode.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -191,8 +198,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /y "$(SolutionDir)json" "$(TargetDir)"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

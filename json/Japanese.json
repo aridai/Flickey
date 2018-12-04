@@ -1,0 +1,17 @@
+[
+    { "style": "OnlyFirstCharacter", "characters": [ "あ", "い", "う", "え", "お" ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "か", "き", "く", "け", "こ" ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "さ", "し", "す", "せ", "そ" ] },
+
+    { "style": "OnlyFirstCharacter", "characters": [ "た", "ち", "つ", "て", "と" ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "な", "に", "ぬ", "ね", "の" ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "は", "ひ", "ふ", "へ", "ほ" ] },
+
+    { "style": "OnlyFirstCharacter", "characters": [ "ま", "み", "む", "め", "も" ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "や", "「", "ゆ", "」", "よ" ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "ら", "り", "る", "れ", "ろ" ] },
+
+    { "style": "OnlyFirstCharacter", "characters": [ "゛゜小", null, null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "わ", "を", "ん", "ー", null ] },
+    { "style": "OneLine", "characters": [ "、", "。", "?", "!", null ] }
+]

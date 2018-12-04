@@ -7,6 +7,7 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:ctrls="clr-namespace:Flickey.Controls"
     xmlns:behaviors="clr-namespace:Flickey.Behaviors"
+    xmlns:vm="clr-namespace:Flickey.ViewModels"
     mc:Ignorable="d"
     Title="Flickey"
     Width="450"
@@ -17,7 +18,12 @@
 
     <i:Interaction.Behaviors>
         <behaviors:MainWindowSetupBehavior />
+        <behaviors:MainWindowViewModelDisposeBehavior />
     </i:Interaction.Behaviors>
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -31,7 +37,7 @@
             <ColumnDefinition Width="32" />
         </Grid.ColumnDefinitions>
 
-        <ctrls:Keyboard Grid.Row="1" Grid.Column="1" />
+        <ctrls:Keyboard Grid.Row="1" Grid.Column="1" Command="{Binding Command}" />
     </Grid>
     
 </Window>

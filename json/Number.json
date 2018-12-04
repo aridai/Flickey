@@ -1,0 +1,17 @@
+[
+    { "style": "TwoLines", "characters": [ "1", "☆", "♪", "→", null ] },
+    { "style": "TwoLines", "characters": [ "2", "￥", "$", "€", null ] },
+    { "style": "TwoLines", "characters": [ "3", "%", "°", "#", null ] },
+
+    { "style": "TwoLines", "characters": [ "4", "○", "*", "・", null ] },
+    { "style": "TwoLines", "characters": [ "5", "+", "×", "÷", null ] },
+    { "style": "TwoLines", "characters": [ "6", "<", "=", ">", null ] },
+
+    { "style": "TwoLines", "characters": [ "7", "「", "」", ":", ";" ] },
+    { "style": "TwoLines", "characters": [ "8", "〒", "々", "〆", null ] },
+    { "style": "TwoLines", "characters": [ "9", "^", "|", "\\", null ] },
+
+    { "style": "OneLine", "characters": [ "(", ")", "[", "]", null ] },
+    { "style": "TwoLines", "characters": [ "0", "~", "…", null, null ] },
+    { "style": "OneLine", "characters": [ ".", ",", "-", "/", null ] }
+]

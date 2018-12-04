@@ -243,14 +243,14 @@ namespace Flickey.Controls
 
         private void OnCharacterReceived(string character)
         {
-            System.Diagnostics.Debug.WriteLine($"入力文字:{character}");
-
             switch (character)
             {
-                case "☆123": this.KeyboardType = KeyboardType.Number; break;
-                case "ABC": this.KeyboardType = KeyboardType.English; break;
-                case "あいう": this.KeyboardType = KeyboardType.Japanese; break;
+                case "☆123": this.KeyboardType = KeyboardType.Number; return;
+                case "ABC": this.KeyboardType = KeyboardType.English; return;
+                case "あいう": this.KeyboardType = KeyboardType.Japanese; return;
             }
+
+            Command.Execute(character);
         }
 
         //  各キーに文字セットを割り当てる。

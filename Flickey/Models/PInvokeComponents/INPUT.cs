@@ -7,7 +7,7 @@ namespace Flickey.Models.PInvokeComponents
     public struct INPUT
     {
         [FieldOffset(0)]
-        public uint type;
+        public InputType type;
 
         [FieldOffset(4)]
         public MOUSEINPUT mi;
