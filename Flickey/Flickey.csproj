@@ -200,4 +200,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /y "$(SolutionDir)json" "$(TargetDir)"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
