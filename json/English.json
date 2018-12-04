@@ -1,0 +1,17 @@
+[
+    { "style": "OneLine", "characters": [ "@", "#", "/", "&", "_" ] },
+    { "style": "OneLine", "characters": [ "A", "B", "C", null, null ] },
+    { "style": "OneLine", "characters": [ "D", "E", "F", null, null ] },
+
+    { "style": "OneLine", "characters": [ "G", "H", "I", null, null ] },
+    { "style": "OneLine", "characters": [ "J", "K", "L", null, null ] },
+    { "style": "OneLine", "characters": [ "M", "N", "O", null, null ] },
+
+    { "style": "OneLine", "characters": [ "P", "Q", "R", "S", null ] },
+    { "style": "OneLine", "characters": [ "T", "U", "V", null, null ] },
+    { "style": "OneLine", "characters": [ "W", "X", "Y", "Z", null ] },
+    
+    { "style": "OnlyFirstCharacter", "characters": [ "a/A", null, null, null, null ] },
+    { "style": "OneLine", "characters": [ "'", "\"", "(", ")", null ] },
+    { "style": "OneLine", "characters": [ ".", ",", "?", "!", null ] }
+]
