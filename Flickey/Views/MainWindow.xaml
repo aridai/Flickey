@@ -18,7 +18,7 @@
 
     <i:Interaction.Behaviors>
         <behaviors:MainWindowSetupBehavior />
-        <behaviors:MainWindowViewModelDisposeBehavior />
+        <behaviors:MainWindowDisposeBehavior />
     </i:Interaction.Behaviors>
 
     <Window.DataContext>
@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="32" />
             </Grid.ColumnDefinitions>
 
-            <controls:Keyboard Grid.Row="1" Grid.Column="1" Command="{Binding Command}" />
+            <controls:Keyboard x:Name="keyboard" Grid.Row="1" Grid.Column="1" Command="{Binding Command}" />
         </Grid>
     </Window.Content>
 

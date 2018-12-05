@@ -47,9 +47,6 @@ namespace Flickey.ViewModels
                 .AddTo(this.disposable);
 
             commandSubject.Subscribe(character => this.inputter.Input(character)).AddTo(this.disposable);
-
-            //commandSubject.Subscribe(c => System.Diagnostics.Debug.WriteLine($"入力文字:{c}")).AddTo(this.disposable);
-            //imeModeProperty.Subscribe(m => System.Diagnostics.Debug.WriteLine($"IMEモード:{m}")).AddTo(this.disposable);
         }
 
         /// <summary>
