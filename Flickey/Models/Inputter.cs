@@ -77,8 +77,6 @@ namespace Flickey.Models
                     var mode = data.InputMode;
                     var codes = data.KeyCodes;
 
-                    System.Diagnostics.Debug.WriteLine($"{character}, {mode.ToString()}, {codes.Aggregate(string.Empty, (total, next) => total + next.ToString())}");
-
                     //  日本語入力モードならば、キーストロークをシミュレートして入力する。
                     if (mode == InputMode.Japanese)
                     {
@@ -123,15 +121,11 @@ namespace Flickey.Models
                 //  マッピングデータが存在しないならば、そのまま直接入力する。
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine($"{character}");
-
                     KeyboardOperator.SetInputMode(InputMode.Direct);
                     KeyboardOperator.InputDirectly(character);
                     this.prevCharacter = null;
                 }
             }
-
-            System.Diagnostics.Debug.WriteLine($"prev:{this.prevCharacter}");
         }
 
         //  キーマッピングデータを取得する。

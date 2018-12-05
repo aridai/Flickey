@@ -198,7 +198,7 @@
     { "character": "ー", "mode": "Japanese", "keys": [ "Subtract" ] },
 
     { "character": "Enter", "mode": "None", "keys": [ "Return" ] },
-    { "character": "Space", "mode": "Direct", "keys": [ "Space" ] },
+    { "character": "Space", "mode": "None", "keys": [ "Space" ] },
     { "character": "Tab", "mode": "None", "keys": [ "Tab" ] },
     { "character": "Back", "mode": "None", "keys": [ "Back" ] },
     { "character": "Del", "mode": "None", "keys": [ "Delete" ] },

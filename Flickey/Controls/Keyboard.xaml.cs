@@ -7,7 +7,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using Newtonsoft.Json;
 using Reactive.Bindings;
@@ -60,7 +59,7 @@ namespace Flickey.Controls
         /// KeyboardTypeプロパティの依存関係プロパティ。
         /// </summary>
         public static readonly DependencyProperty KeyboardTypeProperty =
-            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.Number, OnKeyboardTypeChanged));
+            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.English, OnKeyboardTypeChanged));
 
         /// <summary>
         /// 入力確定時に呼ばれるコマンドの依存関係プロパティ。
@@ -212,10 +211,6 @@ namespace Flickey.Controls
                         this.OnCharacterReceived);
                 }
             }
-
-            //this.inputOperationTarget.Subscribe(tuple => System.Diagnostics.Debug.WriteLine((tuple.key != null && tuple.deviceId != null) ? $"入力中 キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}" : "非入力中"));
-            //this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));
-            //this.fingerPos.Subscribe(pos => System.Diagnostics.Debug.WriteLine($"相対位置:{pos}"));
         }
 
         /// <summary>
@@ -259,22 +254,22 @@ namespace Flickey.Controls
             var fileNames = new[] { "Number.json", "English.json", "Japanese.json" };
 
             //  エラー時の処理は検討中だが、ダミーデータとして「*」が表示されるデータを流す。
-            var dummy = Enumerable.Range(1, 12)
+            var dummy = Enumerable.Range(1, 25)
                 .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { "*", null, null, null, null }))
-                .ToArray();
+                .ToList();
 
-            //  JSONから印字データを読み取り、(1,1)から(3,4)までのキーに設定していく。
+            //  JSONから印字データを読み取り、各キーに設定していく。
             fileNames.ToObservable()
-                .Select(name => JsonConvert.DeserializeObject<CharacterSet[]>(File.ReadAllText(name)))
+                .Select(name => JsonConvert.DeserializeObject<List<CharacterSet>>(File.ReadAllText(name)))
                 .OnErrorResumeNext(Observable.Return(dummy))
                 .ToArray()
                 .Subscribe(setsArray =>
                 {
-                    for (var y = 1; y <= 4; y++)
+                    for (var y = 0; y < 5; y++)
                     {
-                        for (var x = 1; x <= 3; x++)
+                        for (var x = 0; x < 5; x++)
                         {
-                            var index = (y - 1) * 3 + (x - 1);
+                            var index = y * 5 + x;
                             var key = this.keys[y][x];
 
                             var sets = Enumerable.Range(0, 3).Select(n => setsArray[n][index]).ToArray();
@@ -282,29 +277,7 @@ namespace Flickey.Controls
                         }
                     }
                 });
-
-            //  それ以外のキーの印字を設定する。
-            this.keys[0][0].CharacterSets = this.CreateSingleCharacterSets("◁");
-            this.keys[0][1].CharacterSets = this.CreateSingleCharacterSets("Home");
-            this.keys[0][2].CharacterSets = this.CreateSingleCharacterSets("Esc");
-            this.keys[0][3].CharacterSets = this.CreateSingleCharacterSets("End");
-            this.keys[0][4].CharacterSets = this.CreateSingleCharacterSets("▷");
-            this.keys[1][0].CharacterSets = this.CreateSingleCharacterSets("Tab");
-            this.keys[1][4].CharacterSets = this.CreateSingleCharacterSets("Del");
-            this.keys[2][0].CharacterSets = this.CreateSingleCharacterSets("☆123");
-            this.keys[3][0].CharacterSets = this.CreateSingleCharacterSets("ABC");
-            this.keys[4][0].CharacterSets = this.CreateSingleCharacterSets("あいう");
-            this.keys[2][4].CharacterSets = this.CreateSingleCharacterSets("Back");
-            this.keys[3][4].CharacterSets = this.CreateSingleCharacterSets("Space");
-            this.keys[4][4].CharacterSets = this.CreateSingleCharacterSets("Enter");
         }
 
-        //  機能キーの印字を生成する。
-        private IReadOnlyList<CharacterSet> CreateSingleCharacterSets(string label)
-        {
-            return Enumerable.Range(1, 3)
-                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { label, null, null, null, null }))
-                .ToArray();
-        }
     }
 }

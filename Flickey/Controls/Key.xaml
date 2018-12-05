@@ -2,66 +2,55 @@
     x:Class="Flickey.Controls.Key"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:ctrls="clr-namespace:Flickey.Controls"
-    mc:Ignorable="d"
-    d:DesignWidth="64"
-    d:DesignHeight="64">
+    xmlns:controls="clr-namespace:Flickey.Controls">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="KeyControlTemplates.xaml" />
-
+                
+                <!-- KeyコントロールのUIはすべてここで定義されている。 -->
+                <ResourceDictionary Source="KeyTemplates.xaml" />
+                
                 <ResourceDictionary>
-                    <Style TargetType="ctrls:Key">
-                        <Style.Setters>
-                            <!-- とりあえず色の設定もSetter上でやってします。
-                            さもないと、KeyEffect.Focusedのときに、TriggerでBackgroundを変更しても、
-                            優先度が低いため、色が変わらない。 -->
-                            <Setter Property="Background">
-                                <Setter.Value>
-                                    <SolidColorBrush>
-                                        <SolidColorBrush.Color>
-                                            <Color R="97" G="100" B="105" A="255" />
-                                        </SolidColorBrush.Color>
-                                    </SolidColorBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Foreground" Value="White" />
-                        </Style.Setters>
+                    <Style TargetType="controls:Key">
+                        <Setter Property="Background" Value="{StaticResource KeyBackground}" />
+                        <Setter Property="Foreground" Value="{StaticResource KeyForeground}" />
                         <Style.Triggers>
                             
-                            <!-- 印字を表示する行数によって切り替える。 -->
+                            <!-- 印字が2行の場合 -->
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="Shape" Value="Normal" />
                                     <Condition Property="LabelStyle" Value="TwoLines" />
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
-                                    <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal-TwoLines}" />
+                                    <Setter Property="Template" Value="{StaticResource KeyTemplate-Normal-TwoLines}" />
                                 </MultiTrigger.Setters>
                             </MultiTrigger>
+                            
+                            <!-- 印字が1行の場合 -->
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="Shape" Value="Normal" />
                                     <Condition Property="LabelStyle" Value="OneLine" />
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
-                                    <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal}" />
+                                    <Setter Property="Template" Value="{StaticResource KeyTemplate-Normal}" />
                                 </MultiTrigger.Setters>
                             </MultiTrigger>
+                            
+                            <!-- 印字が1文字の場合 -->
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="Shape" Value="Normal" />
                                     <Condition Property="LabelStyle" Value="OnlyFirstCharacter" />
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
-                                    <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Normal}" />
+                                    <Setter Property="Template" Value="{StaticResource KeyTemplate-Normal}" />
                                 </MultiTrigger.Setters>
                             </MultiTrigger>
 
+                            <!-- 選択されている場合 -->
                             <Trigger Property="KeyEffect" Value="Focused">
                                 <Setter Property="Background">
                                     <Setter.Value>
@@ -73,6 +62,8 @@
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
+                            
+                            <!-- ブラーがかかっている場合 -->
                             <Trigger Property="KeyEffect" Value="Blurred">
                                 <Setter Property="Effect">
                                     <Setter.Value>
@@ -81,37 +72,42 @@
                                 </Setter>
                             </Trigger>
                             
+                            <!-- 空のキー -->
                             <Trigger Property="Shape" Value="Empty">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Empty}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Empty}" />
                             </Trigger>
+                            
+                            <!-- スライド時 -->
                             <Trigger Property="Shape" Value="Normal">
                             </Trigger>
                             <Trigger Property="Shape" Value="SlideLeft">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Left}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Slide-Left}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="SlideUp">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Up}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Slide-Up}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="SlideRight">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Right}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Slide-Right}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="SlideDown">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Slide-Down}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Slide-Down}" />
                             </Trigger>
+                            
+                            <!-- ホールド時 -->
                             <Trigger Property="Shape" Value="HoldCenter">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Center}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Hold-Center}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="HoldLeft">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Left}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Hold-Left}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="HoldUp">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Up}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Hold-Up}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="HoldRight">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Right}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Hold-Right}" />
                             </Trigger>
                             <Trigger Property="Shape" Value="HoldDown">
-                                <Setter Property="Template" Value="{StaticResource KeyControlTemplate-Hold-Down}" />
+                                <Setter Property="Template" Value="{StaticResource KeyTemplate-Hold-Down}" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>

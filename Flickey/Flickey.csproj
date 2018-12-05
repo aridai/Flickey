@@ -118,7 +118,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Behaviors\MainWindowSetupBehavior.cs" />
-    <Compile Include="Behaviors\MainWindowViewModelDisposeBehavior.cs" />
+    <Compile Include="Behaviors\MainWindowDisposeBehavior.cs" />
     <Compile Include="Controls\KeyboardComponents\FingerPos.cs" />
     <Compile Include="Controls\KeyboardComponents\OperationType.cs" />
     <Compile Include="Controls\Key.xaml.cs">
@@ -189,7 +189,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\KeyControlTemplates.xaml">
+    <Page Include="Controls\KeyTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

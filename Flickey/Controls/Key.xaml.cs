@@ -266,18 +266,21 @@ namespace Flickey.Controls
             //  操作対象のキーの持つ文字の配列を取得しておく。
             //  この配列は中央・左・上・右・下の順に文字が格納されていて、
             //  nullのときは、ホールド時のキーを表示させない。
-            var chars = target.CurrentCharacterSet.Characters.TakeWhile(character => character != null).ToArray();
+            var chars = target.CurrentCharacterSet.Characters.ToArray();
 
             //  文字がポップアップ表示されるところにあるキーの形を変更しておく。
             for (int i = 0; i < chars.Length; i++)
             {
-                var grid = this.GetAdjacentGridNums(target, FingerPos.Neutral + i);
-                if (grid == (this.Row, this.Column))
+                if (!string.IsNullOrWhiteSpace(chars[i]))
                 {
-                    this.Shape = KeyShape.HoldCenter + i;
-                    this.KeyEffect = (i == 0) ? KeyEffect.Focused : KeyEffect.NoEffect;
-                    this.PrimaryText = chars[i];
-                    return;
+                    var grid = this.GetAdjacentGridNums(target, FingerPos.Neutral + i);
+                    if (grid == (this.Row, this.Column))
+                    {
+                        this.Shape = KeyShape.HoldCenter + i;
+                        this.KeyEffect = (i == 0) ? KeyEffect.Focused : KeyEffect.NoEffect;
+                        this.PrimaryText = chars[i];
+                        return;
+                    }
                 }
             }
         }
@@ -292,9 +295,7 @@ namespace Flickey.Controls
                 if (this.Shape < KeyShape.HoldCenter) return;
 
                 this.KeyEffect = KeyEffect.NoEffect;
-
-                var num = target.CurrentCharacterSet.Characters.TakeWhile(character => character != null).Count();
-                if ((int)pos < num)
+                if (!string.IsNullOrWhiteSpace(target.CurrentCharacterSet.Characters[(int)pos]))
                 {
                     //  指の位置にあるキーをフォーカスする。
                     var grid = this.GetAdjacentGridNums(target, pos);
@@ -307,27 +308,29 @@ namespace Flickey.Controls
             else
             {
                 //  操作対象のキーの持つ文字の配列を取得しておく。
-                var chars = target.CurrentCharacterSet.Characters
-                    .TakeWhile(character => character != null).ToArray();
+                var chars = target.CurrentCharacterSet.Characters;
 
                 //  スライド可能な向きにあるキーをループで回す。
-                for (int i = 0; i < chars.Length; i++)
+                for (int i = 0; i < chars.Count; i++)
                 {
-                    var currentPos = FingerPos.Neutral + i;
-                    var grid = this.GetAdjacentGridNums(target, FingerPos.Neutral + i);
-
-                    if (grid == (this.Row, this.Column))
+                    if (!string.IsNullOrWhiteSpace(chars[i]))
                     {
-                        //  指がある位置にあるキーならば。
-                        if (currentPos == pos)
-                        {
-                            this.Shape = KeyShape.Normal + i;
-                            this.PrimaryText = chars[i];
-                            this.KeyEffect = KeyEffect.Focused;
-                        }
+                        var currentPos = FingerPos.Neutral + i;
+                        var grid = this.GetAdjacentGridNums(target, FingerPos.Neutral + i);
 
-                        //  指がない位置にあるキーならば。
-                        else this.Refresh();
+                        if (grid == (this.Row, this.Column))
+                        {
+                            //  指がある位置にあるキーならば。
+                            if (currentPos == pos)
+                            {
+                                this.Shape = KeyShape.Normal + i;
+                                this.PrimaryText = chars[i];
+                                this.KeyEffect = KeyEffect.Focused;
+                            }
+
+                            //  指がない位置にあるキーならば。
+                            else this.Refresh();
+                        }
                     }
                 }
 
