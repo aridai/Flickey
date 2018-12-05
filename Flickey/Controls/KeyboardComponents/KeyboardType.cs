@@ -8,6 +8,11 @@ namespace Flickey.Controls.KeyboardComponents
     public enum KeyboardType
     {
         /// <summary>
+        /// ショートカットキーボード。
+        /// </summary>
+        Shortcuts,
+
+        /// <summary>
         /// 数字キーボード。
         /// </summary>
         Number,

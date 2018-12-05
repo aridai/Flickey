@@ -240,6 +240,7 @@ namespace Flickey.Controls
         {
             switch (character)
             {
+                case "Ctrl+α": this.KeyboardType = KeyboardType.Shortcuts; return;
                 case "☆123": this.KeyboardType = KeyboardType.Number; return;
                 case "ABC": this.KeyboardType = KeyboardType.English; return;
                 case "あいう": this.KeyboardType = KeyboardType.Japanese; return;
@@ -251,7 +252,7 @@ namespace Flickey.Controls
         //  各キーに文字セットを割り当てる。
         private void SetCharacterSets()
         {
-            var fileNames = new[] { "Number.json", "English.json", "Japanese.json" };
+            var fileNames = new[] { "Shortcuts.json", "Number.json", "English.json", "Japanese.json" };
 
             //  エラー時の処理は検討中だが、ダミーデータとして「*」が表示されるデータを流す。
             var dummy = Enumerable.Range(1, 25)
@@ -272,7 +273,7 @@ namespace Flickey.Controls
                             var index = y * 5 + x;
                             var key = this.keys[y][x];
 
-                            var sets = Enumerable.Range(0, 3).Select(n => setsArray[n][index]).ToArray();
+                            var sets = Enumerable.Range(0, 4).Select(n => setsArray[n][index]).ToArray();
                             key.CharacterSets = sets;
                         }
                     }
