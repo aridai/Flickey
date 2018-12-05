@@ -2,19 +2,19 @@
     x:Class="Flickey.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:ctrls="clr-namespace:Flickey.Controls"
+    xmlns:controls="clr-namespace:Flickey.Controls"
     xmlns:behaviors="clr-namespace:Flickey.Behaviors"
-    xmlns:vm="clr-namespace:Flickey.ViewModels"
-    mc:Ignorable="d"
+    xmlns:viewmodels="clr-namespace:Flickey.ViewModels"
     Title="Flickey"
     Width="450"
     Height="400"
+    Topmost="True"
     Focusable="False"
     ShowActivated="False"
-    Topmost="True">
+    SnapsToDevicePixels="True"
+    Stylus.IsPressAndHoldEnabled="False"
+    Background="{StaticResource KeyboardBackground}">
 
     <i:Interaction.Behaviors>
         <behaviors:MainWindowSetupBehavior />
@@ -22,22 +22,25 @@
     </i:Interaction.Behaviors>
 
     <Window.DataContext>
-        <vm:MainWindowViewModel />
+        <viewmodels:MainWindowViewModel />
     </Window.DataContext>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="32" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="32" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="32" />
-        </Grid.ColumnDefinitions>
+    <Window.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="32" />
+            </Grid.RowDefinitions>
 
-        <ctrls:Keyboard Grid.Row="1" Grid.Column="1" Command="{Binding Command}" />
-    </Grid>
-    
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="32" />
+            </Grid.ColumnDefinitions>
+
+            <controls:Keyboard Grid.Row="1" Grid.Column="1" Command="{Binding Command}" />
+        </Grid>
+    </Window.Content>
+
 </Window>
