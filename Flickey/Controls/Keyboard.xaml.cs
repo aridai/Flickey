@@ -27,11 +27,6 @@ namespace Flickey.Controls
         //  入力操作のホールド操作だと判定されるまでのタイムアウト。
         private readonly TimeSpan holdDetectionTimeout = TimeSpan.FromSeconds(0.5);
 
-        //  入力操作時のスライド入力とみなされる指の移動量のしきい値。
-        //  この値は可変にしたい。
-        //  キーの横幅であるとか。
-        private readonly float distanceThreshold = 64.0f;
-
         private readonly CompositeDisposable disposable = new CompositeDisposable();
 
         //  5x5=25個のキーを保持しておく。
@@ -149,18 +144,34 @@ namespace Flickey.Controls
 
             //  指の位置を通知する。
             var fingerPosStream = Observable.WithLatestFrom(
-                this.touchMoveStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
-                this.touchDownStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
-                (current, starting) => current - starting)
-                .Select(vec =>
+                this.touchMoveStream,
+                this.touchDownStream,
+                (current, reference) =>
                 {
-                    if (Math.Abs(vec.X) > this.distanceThreshold || Math.Abs(vec.Y) > this.distanceThreshold)
+                    //  基準のキーの中心からの位置をベクトルで取得する。
+                    var width = reference.key.ActualWidth;
+                    var height = reference.key.ActualHeight;
+                    var relativePos = current.args.GetTouchPoint(reference.key).Position;
+                    var vec = new Vector(relativePos.X - width / 2, -(relativePos.Y - height / 2));
+
+                    //  X成分とY成分の絶対値がそれぞれ、幅と高さの半分よりも小さければ、基準のキーからはみ出していない。
+                    if (Math.Abs(vec.X) <= width / 2 && Math.Abs(vec.Y) <= height / 2) return FingerPos.Neutral;
+
+                    //  変位ベクトルと基準のキーの右上方向ベクトルとのなす角が正ならば、左または上になる。
+                    else if (Vector.AngleBetween(new Vector(width, height), vec) > 0)
                     {
-                        if (Math.Abs(vec.X) > Math.Abs(vec.Y)) return (vec.X > 0) ? FingerPos.Right : FingerPos.Left;
-                        else return (vec.Y > 0) ? FingerPos.Bottom : FingerPos.Top;
+                        //  変位ベクトルと基準のキーの左上方向ベクトルとのなす角が、
+                        //  正ならば左になり、負ならば上となる。
+                        return (Vector.AngleBetween(new Vector(-width, height), vec) > 0) ? FingerPos.Left : FingerPos.Top;
                     }
 
-                    return FingerPos.Neutral;
+                    //  なす角が負ならば、右または下になる。
+                    else
+                    {
+                        //  変位ベクトルと基準のキーの右下方向ベクトルとのなす角が、
+                        //  正ならば右になり、負ならば下となる。
+                        return (Vector.AngleBetween(new Vector(width, -height), vec) > 0) ? FingerPos.Right : FingerPos.Bottom;
+                    }
                 }).Publish();
             fingerPosStream.Connect().AddTo(this.disposable);
 
