@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -32,9 +33,9 @@ namespace Flickey.Models
             var jsonStr = this.fileReader.ReadAllText(JsonFileName);
 
             var settings = new JsonSerializerSettings { Converters = new[] { new StringEnumConverter() } };
-            var obj = JsonConvert.DeserializeObject<List<(string character, InputMode mode, List<List<VirtualKeyCode>> keys)>>(jsonStr, settings);
+            var obj = JsonConvert.DeserializeObject<List<Data>>(jsonStr, settings);
 
-            this.dictionary = obj.Select(tuple => (tuple.character, tuple.mode, structures: this.GenerateInputStructure(tuple.keys)))
+            this.dictionary = obj.Select(data => (character: data.Character, mode: data.Mode, structures: this.GenerateInputStructures(data.KeyCodes)))
                 .Select(tuple => tuple.structures != null ? new InputInfo(tuple.character, tuple.mode, tuple.structures) : null)
                 .Where(info => info != null)
                 .ToDictionary(info => info.Character, info => info);
@@ -51,14 +52,23 @@ namespace Flickey.Models
             return null;
         }
 
-        /// <summary>
-        /// 仮想キーコードの2次元リストから<see cref="INPUT"/>構造体のリストを生成します。
-        /// </summary>
-        /// <param name="keys">仮想キーコードの2次元リスト。</param>
-        /// <returns>処理に成功した場合は<see cref="INPUT"/>構造体のリストを返します。失敗した場合はnullを返します。</returns>
-        public IReadOnlyList<INPUT> GenerateInputStructure(IReadOnlyList<IReadOnlyList<VirtualKeyCode>> keys)
+        //  仮想キーコードの2次元リストからINPUT構造体のリストを作る。
+        private IReadOnlyList<INPUT> GenerateInputStructures(IReadOnlyList<IReadOnlyList<VirtualKeyCode>> keys)
         {
             return null;
+        }
+
+        [DataContract]
+        internal struct Data
+        {
+            [DataMember(Name = "character")]
+            public string Character { get; set; }
+
+            [DataMember(Name = "mode")]
+            public InputMode Mode { get; set; }
+
+            [DataMember(Name = "keys")]
+            public List<List<VirtualKeyCode>> KeyCodes;
         }
     }
 }
