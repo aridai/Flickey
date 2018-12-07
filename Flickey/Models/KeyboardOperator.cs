@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Flickey.Models
@@ -76,30 +77,6 @@ namespace Flickey.Models
             var length = virtualKeyCodes.Count;
             var inputs = new INPUT[length * 2];
 
-            //  キーのマッピングデータの仕様がぶれている。
-            //  keysは、同時押しのための複数指定なのか、
-            //  複数個別押しのための複数していなのか。
-            
-            //  装飾キーの場合は離すことはしないが、
-            //  それ以外は毎度離すようにする?
-
-            //  KeyboardOperator.InputKey(IROL<VKC>)と仕様が違う気がする。
-            //  このメソッドは、同時押しをするメソッドで、
-            //  Mapping.jsonは、複数個別押しを記述しているように思える。(ひらがな入力に対して。)
-
-            //  keysの型を変えて、直接仮想キーコードの配列にするのではなく、
-            //  "keys": [ "Shift_Down", "A", "Shift_Up" ]みたいな?
-            //  うーん。冗長だな。
-            //  でも、今のところ、
-            //  「ばか」ならば、"keys": [["B"], ["A"]] 
-            //  「F**K」ならば、"keys": [["Shift", "F"], ["Shift", "OEM1"], ["Shift", "OME1"], ["Shift", "K"]]
-            //  みたいにしたいとは思っている。
-            //  でも、これだと、「F**K」の例で言うと、Fと*の間で、Shiftは離されるわけですね。
-            //  Shiftを押しっぱなしでいろいろしたいときは死にそう。
-            //  今ひらめいたのは、次も残っているキーは離す信号を入れない、F*の例だと、Shift_Down->F_Down->F_Up->OEM1_DOWN->OEM1_Up->Shift_Upみたいな。
-            //  これはこっち側の実装で。
-            //  あと、先打ち、後離しで。Shiftを先に書くと、後で離される的な。
-
             for (int i = 0; i < length; i++)
             {
                 var structures = ToInputStructure(virtualKeyCodes[i]);
@@ -108,6 +85,16 @@ namespace Flickey.Models
             }
 
             PInvokeFunctions.SendInput(length * 2, inputs, SizeOfInputStructure);
+        }
+
+        /// <summary>
+        /// <see cref="INPUT"/>構造体のコレクションを指定して入力を行います。
+        /// </summary>
+        /// <param name="inputStructures"><see cref="INPUT"/>構造体のコレクション。</param>
+        public static void SendInput(IEnumerable<INPUT> inputStructures)
+        {
+            var array = inputStructures.ToArray();
+            PInvokeFunctions.SendInput(array.Length, array, SizeOfInputStructure);
         }
 
         /// <summary>

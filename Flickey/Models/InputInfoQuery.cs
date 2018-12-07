@@ -34,8 +34,8 @@ namespace Flickey.Models
             var settings = new JsonSerializerSettings { Converters = new[] { new StringEnumConverter() } };
             var obj = JsonConvert.DeserializeObject<List<(string character, InputMode mode, List<List<VirtualKeyCode>> keys)>>(jsonStr, settings);
 
-            this.dictionary = obj.Select(tuple => (tuple.character, tuple.mode, structure: this.GenerateInputStructure(tuple.keys)))
-                .Select(tuple => tuple.structure != null ? new InputInfo(tuple.character, tuple.mode, tuple.structure.Value) : null)
+            this.dictionary = obj.Select(tuple => (tuple.character, tuple.mode, structures: this.GenerateInputStructure(tuple.keys)))
+                .Select(tuple => tuple.structures != null ? new InputInfo(tuple.character, tuple.mode, tuple.structures) : null)
                 .Where(info => info != null)
                 .ToDictionary(info => info.Character, info => info);
         }
@@ -52,11 +52,11 @@ namespace Flickey.Models
         }
 
         /// <summary>
-        /// 仮想キーコードの2次元リストから<see cref="INPUT"/>構造体を生成します。
+        /// 仮想キーコードの2次元リストから<see cref="INPUT"/>構造体のリストを生成します。
         /// </summary>
         /// <param name="keys">仮想キーコードの2次元リスト。</param>
-        /// <returns>処理に成功した場合は<see cref="INPUT"/>構造体を返します。失敗した場合はnullを返します。</returns>
-        public INPUT? GenerateInputStructure(IReadOnlyList<IReadOnlyList<VirtualKeyCode>> keys)
+        /// <returns>処理に成功した場合は<see cref="INPUT"/>構造体のリストを返します。失敗した場合はnullを返します。</returns>
+        public IReadOnlyList<INPUT> GenerateInputStructure(IReadOnlyList<IReadOnlyList<VirtualKeyCode>> keys)
         {
             return null;
         }

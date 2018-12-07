@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Flickey.Models
 {
@@ -12,42 +7,22 @@ namespace Flickey.Models
     /// </summary>
     public sealed class Inputter
     {
-        private readonly IReadOnlyDictionary<string, KeyMapping> mappingDictionary;
+        private readonly InputInfoQuery inputInfoQuery;
 
-        private readonly IReadOnlyDictionary<char, char> hiraganaConversionDictionary;
+        private readonly ConversionQuery conversionQuery;
 
-        //  前回の入力を保持する。
-        //  ひらがなの濁点・半濁点・小文字と
-        //  アルファベットの大文字・小文字の切り替えるのに使う。
-        private char? prevCharacter;
-
-        /// <summary>
-        /// キーマッピングが保存されたJSONファイル名。
-        /// </summary>
-        public const string KeyMappingFileName = "Mapping.json";
-
-        /// <summary>
-        /// ひらがな変換のデータが保存されたJSONファイル名。
-        /// </summary>
-        public const string HiraganaConversionFileName = "Conversion.json";
+        //  前回の入力文字を保持しておく。
+        //  変換ボタンが押されたときに必要になる。
+        private string prevCharacter;
 
         /// <summary>
         /// インスタンスを生成して初期化します。
         /// </summary>
         public Inputter()
         {
-            //  Jsonからマッピングデータを読み込み、
-            //  入力文字からキーコードを検索できる連想配列を作る。
-            var mappingJson = File.ReadAllText(KeyMappingFileName);
-            var settings = new JsonSerializerSettings { Converters = new[] { new StringEnumConverter() } };
-            this.mappingDictionary = JsonConvert.DeserializeObject<List<KeyMapping>>(mappingJson, settings)
-                .ToDictionary(data => data.Character, data => data);
-
-            //  Jsonからひらがな変換データを読み込み、
-            //  変換後の文字を検索できる連想配列を作る。
-            var hiraganaConversionJson = File.ReadAllText(HiraganaConversionFileName);
-            this.hiraganaConversionDictionary = JsonConvert.DeserializeObject<List<List<char>>>(hiraganaConversionJson)
-                .ToDictionary(data => data[0], data => data[1]);
+            var reader = new FileReader();
+            this.inputInfoQuery = new InputInfoQuery(reader);
+            this.conversionQuery = new ConversionQuery(reader);
         }
 
         /// <summary>
@@ -56,148 +31,76 @@ namespace Flickey.Models
         /// <param name="character">入力文字。</param>
         public void Input(string character)
         {
-            if (character == "a/A")
+            //  変換キーが押されたなら、前回の入力を変換して再入力する。
+            if (this.IsConversionSignal(character))
             {
-                this.prevCharacter = (this.prevCharacter != null)
-                    ? this.ToggleLetterCase(this.prevCharacter.Value) : default;
+                this.prevCharacter =
+                    this.ConvertPrevCharacter(this.prevCharacter);
             }
 
-            else if (character == "゛゜小")
-            {
-                this.prevCharacter = (this.prevCharacter != null)
-                    ? this.ConvertHiragana(this.prevCharacter.Value) : default;
-            }
-            
             else
             {
                 //  マッピングデータが存在するならば、それを使う。
-                var result = this.GetMappingData(character);
-                if (result is KeyMapping data)
+                if (this.inputInfoQuery.GetInputInfo(character) is InputInfo info)
                 {
-                    var mode = data.InputMode;
-                    var codes = data.KeyCodes;
-
-                    //  日本語入力モードならば、キーストロークをシミュレートして入力する。
-                    if (mode == InputMode.Japanese)
-                    {
-                        KeyboardOperator.SetInputMode(InputMode.Japanese);
-                        KeyboardOperator.InputKey(codes);
-
-                        //  入力文字を更新する。
-                        //  ひらがなの変換で使うため。
-                        this.prevCharacter = (data.Character.Length == 1 && this.IsHiragana(data.Character[0]))
-                            ? data.Character[0] : default(char?);
-                    }
-
-                    //  直接入力モードまたは入力モード未指定のとき。
-                    else
-                    {
-                        //  直接入力モードが指定された場合のみ切り替える。
-                        //  未指定の場合は切り替えない。
-                        if (mode == InputMode.Direct)
-                            KeyboardOperator.SetInputMode(InputMode.Direct);
-
-                        //  キーコードの指定があればそれを使う。
-                        if (codes.Count > 0)
-                        {
-                            KeyboardOperator.InputKey(codes);
-                        }
-
-                        //  指定がなければ直接入力する。
-                        else
-                        {
-                            KeyboardOperator.InputDirectly(character);
-                        }
-
-                        var hoge = data.Character[0];
-
-                        //  入力文字を更新する。
-                        //  大文字・小文字の変換で使うため。
-                        this.prevCharacter = (data.Character.Length == 1 && this.IsEnlishAlphabet(data.Character[0]))
-                            ? char.ToLower(data.Character[0]) : default(char?);
-                    }
+                    this.prevCharacter =
+                        this.SendInputWithInputInfo(info);
                 }
 
                 //  マッピングデータが存在しないならば、そのまま直接入力する。
                 else
                 {
-                    KeyboardOperator.SetInputMode(InputMode.Direct);
-                    KeyboardOperator.InputDirectly(character);
-                    this.prevCharacter = null;
+                    this.prevCharacter =
+                        this.SendInputDirectly(character);
                 }
             }
         }
 
-        //  キーマッピングデータを取得する。
-        private KeyMapping? GetMappingData(string character)
+        //  文字が変換キーの入力なのかどうかを判定する。
+        private bool IsConversionSignal(string character)
         {
-            if (this.mappingDictionary.TryGetValue(character, out var data))
-                return data;
-
-            return null;
+            return (character == "a/A" || character == "゛゜小");
         }
 
-        //  ひらがなの変換後の文字を取得する。
-        //  変換できない場合はnullを返す。
-        private char? GetHiraganaConversionCharacter(char character)
+        //  前回の入力を変換して再入力する。
+        private string ConvertPrevCharacter(string prevCharacter)
         {
-            if (this.hiraganaConversionDictionary.TryGetValue(character, out var next))
-                return next;
-
-            return null;
-        }
-
-        //  アルファベットの大文字と小文字を切り替える。
-        private char? ToggleLetterCase(char character)
-        {
-            if (this.IsEnlishAlphabet(character))
+            //  変換後の文字を取得して、存在するならば。
+            if (this.conversionQuery.GetConvertedCharacter(prevCharacter) is string converted)
             {
-                //  1文字消して、ケースを反転した文字を入力する。
-                KeyboardOperator.SetInputMode(InputMode.Direct);
-                KeyboardOperator.InputKey(VirtualKeyCode.Back);
+                //  変換後の文字も、入力情報が存在すれば、それに従って入力する。
+                if (this.inputInfoQuery.GetInputInfo(converted) is InputInfo info)
+                    this.SendInputWithInputInfo(info);
 
-                character = char.IsLower(character) ? char.ToUpper(character) : char.ToLower(character);
-                KeyboardOperator.InputDirectly(character.ToString());
+                else this.SendInputDirectly(converted);
 
-                return character;
+                return converted;
             }
-
-            return null;
+            
+            return prevCharacter;
         }
 
-        //  ひらがなを変換する。
-        private char? ConvertHiragana(char character)
+        //  InputInfoに従って入力を送信する。
+        private string SendInputWithInputInfo(InputInfo info)
         {
-            if (this.GetHiraganaConversionCharacter(character) is char c)
-            {
-                if (this.GetMappingData(c.ToString()) is KeyMapping data)
-                {
-                    //  1文字消して、変換後の文字を入力する。
-                    KeyboardOperator.SetInputMode(data.InputMode);
-                    KeyboardOperator.InputKey(VirtualKeyCode.Back);
+            //  IMEの入力モードを設定する。
+            //  InputMode.Noneの場合は、入力モードを変更せずに、現在の入力モードのままにしておく。
+            if (info.InputMode != InputMode.None)
+                KeyboardOperator.SetInputMode(info.InputMode);
 
-                    KeyboardOperator.InputKey(data.KeyCodes);
-                    return c;
-                }
-            }
+            //  INPUT構造体のリストをそのまま送信する。
+            KeyboardOperator.SendInput(info.Structures);
 
-            return null;
+            return info.Character;
         }
 
-        //  指定した文字が日本語のひらがなかどうかを判定する。
-        private bool IsHiragana(char character)
+        //  文字をそのまま (キーストロークをシミュレートする方式ではない方式で) 入力する。
+        private string SendInputDirectly(string character)
         {
-            var code = (int)character;
-            return 'あ' <= code && code <= 'ん';
-        }
+            KeyboardOperator.SetInputMode(InputMode.Direct);
+            KeyboardOperator.InputDirectly(character);
 
-        //  指定した文字が英語のアルファベットかどうかを判定する。
-        private bool IsEnlishAlphabet(char character)
-        {
-            //  大文字と小文字の文字コードは連続していない。
-            //  大文字か小文字のいずれかならアルファベットであると判定する。
-            var code = (int)character;
-            return 'A' <= code && code <= 'Z' || 'a' <= code && code <= 'z';
+            return character;
         }
     }
 }

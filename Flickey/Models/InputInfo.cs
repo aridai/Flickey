@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Flickey.Models
 {
@@ -20,21 +21,21 @@ namespace Flickey.Models
         public InputMode InputMode { get; }
 
         /// <summary>
-        /// <see cref="INPUT"/>構造体。
+        /// <see cref="INPUT"/>構造体のリスト。
         /// </summary>
-        public INPUT Structure { get; }
+        public IReadOnlyList<INPUT> Structures { get; }
 
         /// <summary>
         /// インスタンスを生成して初期化します。
         /// </summary>
         /// <param name="character">入力文字。</param>
         /// <param name="mode">IMEの入力モード。</param>
-        /// <param name="structure"><see cref="INPUT"/>構造体。</param>
-        public InputInfo(string character, InputMode mode, INPUT structure)
+        /// <param name="structure"><see cref="INPUT"/>構造体のリスト。</param>
+        public InputInfo(string character, InputMode mode, IReadOnlyList<INPUT> structures)
         {
             this.Character = character;
             this.InputMode = mode;
-            this.Structure = structure;
+            this.Structures = structures;
         }
     }
 }
