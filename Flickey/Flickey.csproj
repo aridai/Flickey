@@ -132,10 +132,15 @@
     <Compile Include="Controls\KeyboardComponents\KeyEffect.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyShape.cs" />
     <Compile Include="Controls\KeyboardComponents\LabelStyle.cs" />
+    <Compile Include="Models\ConversionQuery.cs" />
+    <Compile Include="Models\FileReader.cs" />
+    <Compile Include="Models\IFileReader.cs" />
+    <Compile Include="Models\InputInfo.cs" />
     <Compile Include="Models\InputMode.cs" />
     <Compile Include="Models\KeyMapping.cs" />
     <Compile Include="Models\Inputter.cs" />
     <Compile Include="Models\KeyboardOperator.cs" />
+    <Compile Include="Models\InputInfoQuery.cs" />
     <Compile Include="Models\PInvokeComponents\GUITHREADINFO.cs" />
     <Compile Include="Models\PInvokeComponents\HARDWAREINPUT.cs" />
     <Compile Include="Models\PInvokeComponents\INPUT.cs" />
@@ -147,6 +152,7 @@
     <Compile Include="Models\PInvokeComponents\WindowLongOffset.cs" />
     <Compile Include="Models\PInvokeComponents\WindowPosFlags.cs" />
     <Compile Include="Models\PInvokeComponents\WindowMessage.cs" />
+    <Compile Include="Models\TestFileReader.cs" />
     <Compile Include="Models\VirtualKeyCode.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">

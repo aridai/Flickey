@@ -12,7 +12,7 @@ namespace Flickey.Models
     /// </summary>
     public sealed class Inputter
     {
-        private readonly IReadOnlyDictionary<string, KeyMapping> keyMappingDictionary;
+        private readonly IReadOnlyDictionary<string, KeyMapping> mappingDictionary;
 
         private readonly IReadOnlyDictionary<char, char> hiraganaConversionDictionary;
 
@@ -24,12 +24,12 @@ namespace Flickey.Models
         /// <summary>
         /// キーマッピングが保存されたJSONファイル名。
         /// </summary>
-        public const string KeyMappingFileName = "KeyMapping.json";
+        public const string KeyMappingFileName = "Mapping.json";
 
         /// <summary>
         /// ひらがな変換のデータが保存されたJSONファイル名。
         /// </summary>
-        public const string HiraganaConversionFileName = "HiraganaConversion.json";
+        public const string HiraganaConversionFileName = "Conversion.json";
 
         /// <summary>
         /// インスタンスを生成して初期化します。
@@ -38,9 +38,9 @@ namespace Flickey.Models
         {
             //  Jsonからマッピングデータを読み込み、
             //  入力文字からキーコードを検索できる連想配列を作る。
-            var keyMappingJson = File.ReadAllText(KeyMappingFileName);
+            var mappingJson = File.ReadAllText(KeyMappingFileName);
             var settings = new JsonSerializerSettings { Converters = new[] { new StringEnumConverter() } };
-            this.keyMappingDictionary = JsonConvert.DeserializeObject<List<KeyMapping>>(keyMappingJson, settings)
+            this.mappingDictionary = JsonConvert.DeserializeObject<List<KeyMapping>>(mappingJson, settings)
                 .ToDictionary(data => data.Character, data => data);
 
             //  Jsonからひらがな変換データを読み込み、
@@ -131,7 +131,7 @@ namespace Flickey.Models
         //  キーマッピングデータを取得する。
         private KeyMapping? GetMappingData(string character)
         {
-            if (this.keyMappingDictionary.TryGetValue(character, out var data))
+            if (this.mappingDictionary.TryGetValue(character, out var data))
                 return data;
 
             return null;

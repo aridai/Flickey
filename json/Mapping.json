@@ -195,7 +195,7 @@
 
     { "character": "、", "mode": "Japanese", "keys": [ "OEMComma" ] },
     { "character": "。", "mode": "Japanese", "keys": [ "OEMPeriod" ] },
-    { "character": "ー", "mode": "Japanese", "keys": [ "Subtract" ] },
+    { "character": "ー", "mode": "Japanese", "keys": [ "OEMMINUS" ] },
 
     { "character": "Enter", "mode": "None", "keys": [ "Return" ] },
     { "character": "Space", "mode": "None", "keys": [ "Space" ] },
