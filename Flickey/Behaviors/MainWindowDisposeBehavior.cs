@@ -10,10 +10,10 @@ namespace Flickey.Behaviors
         {
             base.OnAttached();
 
-            AssociatedObject.Closed += (_, __) =>
+            this.AssociatedObject.Closed += (_, __) =>
             {
-                (AssociatedObject.DataContext as IDisposable)?.Dispose();
-                (AssociatedObject.FindName("keyboard") as IDisposable)?.Dispose();
+                (this.AssociatedObject.DataContext as IDisposable)?.Dispose();
+                (this.AssociatedObject.FindName("keyboard") as IDisposable)?.Dispose();
             };
         }
     }

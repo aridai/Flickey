@@ -94,8 +94,16 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal" FlowDirection="RightToLeft">
-                <Button Width="44" FontSize="16" Content="r" Foreground="White" Style="{StaticResource CaptionButton}" />
-                <Button Width="44" FontSize="16" Content="0" Foreground="White" Style="{StaticResource CaptionButton}" />
+                <Button Width="44" FontSize="16" Content="r" Foreground="White" Style="{StaticResource CaptionButton}">
+                    <i:Interaction.Behaviors>
+                        <behaviors:CloseButtonBehavior />
+                    </i:Interaction.Behaviors>
+                </Button>
+                <Button Width="44" FontSize="16" Content="0" Foreground="White" Style="{StaticResource CaptionButton}">
+                    <i:Interaction.Behaviors>
+                        <behaviors:MinimizeButtonBehavior />
+                    </i:Interaction.Behaviors>
+                </Button>
             </StackPanel>
 
             <controls:Keyboard x:Name="keyboard" Grid.Row="2" Grid.Column="1" Command="{Binding Command}" />
