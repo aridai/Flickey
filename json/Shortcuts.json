@@ -6,26 +6,26 @@
     { "style": "OnlyFirstCharacter", "characters": [ "▷", "End", null, null, null ] },
 
     { "style": "OnlyFirstCharacter", "characters": [ "Ctrl+α", null, null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "全選択", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "コピー", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "ペースト", null, null, null ] },
     { "style": "OnlyFirstCharacter", "characters": [ "Back", "Del", null, null, null ] },
 
     { "style": "OnlyFirstCharacter", "characters": [ "☆123", null, null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "タスクマネージャ", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "エクスプローラ", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "デスクトップ", null, null, null ] },
     { "style": "OnlyFirstCharacter", "characters": [ "Tab", "4 Spaces", "2 Spaces", null, null ] },
 
     { "style": "OnlyFirstCharacter", "characters": [ "ABC", null, null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "左のデスクトップへ", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "タスクビュー", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "右のデスクトップへ", null, null, null ] },
     { "style": "OnlyFirstCharacter", "characters": [ "Space", null, null, null, null ] },
 
     { "style": "OnlyFirstCharacter", "characters": [ "あいう", null, null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
-    { "style": "OnlyFirstCharacter", "characters": [ "🍣", null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "🍣", "🥩", null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "(๑•ૅㅁ•๑)", "♪(๑ᴖ◡ᴖ๑)♪", "٩(๑❛ᴗ❛๑)۶", "ｳﾞｧﾈｯ!" ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "🤔", null, null, null ] },
     { "style": "OnlyFirstCharacter", "characters": [ "Enter", null, null, null, null ] }
 ]

@@ -233,5 +233,17 @@
     { "character": "Home", "mode": "None", "keys": [ [ "Home" ] ] },
     { "character": "End", "mode": "None", "keys": [ [ "End" ] ] },
     { "character": "◁", "mode": "None", "keys": [ [ "Left" ] ] },
-    { "character": "▷", "mode": "None", "keys": [ [ "Right" ] ] }
+    { "character": "▷", "mode": "None", "keys": [ [ "Right" ] ] },
+
+    { "character": "全選択", "mode": "None", "keys": [ [ "Control", "A" ] ] },
+    { "character": "コピー", "mode": "None", "keys": [ [ "Control", "C" ] ] },
+    { "character": "ペースト", "mode": "None", "keys": [ [ "Control", "V" ] ] },
+
+    { "character": "タスクマネージャ", "mode": "None", "keys": [ [ "Control", "Shift", "Escape" ] ] },
+    { "character": "エクスプローラ", "mode": "None", "keys": [ [ "LeftWindows", "E" ] ] },
+    { "character": "デスクトップ", "mode": "None", "keys": [ [ "LeftWindows", "D" ] ] },
+
+    { "character": "左のデスクトップへ", "mode": "None", "keys": [ [ "Control", "LeftWindows", "Left" ] ] },
+    { "character": "タスクビュー", "mode": "None", "keys": [ [ "LeftWindows", "Tab" ] ] },
+    { "character": "右のデスクトップへ", "mode": "None", "keys": [ [ "Control", "LeftWindows", "Right" ] ] }
 ]
