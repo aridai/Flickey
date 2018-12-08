@@ -146,33 +146,7 @@ namespace Flickey.Controls
             var fingerPosStream = Observable.WithLatestFrom(
                 this.touchMoveStream,
                 this.touchDownStream,
-                (current, reference) =>
-                {
-                    //  基準のキーの中心からの位置をベクトルで取得する。
-                    var width = reference.key.ActualWidth;
-                    var height = reference.key.ActualHeight;
-                    var relativePos = current.args.GetTouchPoint(reference.key).Position;
-                    var vec = new Vector(relativePos.X - width / 2, -(relativePos.Y - height / 2));
-
-                    //  X成分とY成分の絶対値がそれぞれ、幅と高さの半分よりも小さければ、基準のキーからはみ出していない。
-                    if (Math.Abs(vec.X) <= width / 2 && Math.Abs(vec.Y) <= height / 2) return FingerPos.Neutral;
-
-                    //  変位ベクトルと基準のキーの右上方向ベクトルとのなす角が正ならば、左または上になる。
-                    else if (Vector.AngleBetween(new Vector(width, height), vec) > 0)
-                    {
-                        //  変位ベクトルと基準のキーの左上方向ベクトルとのなす角が、
-                        //  正ならば左になり、負ならば上となる。
-                        return (Vector.AngleBetween(new Vector(-width, height), vec) > 0) ? FingerPos.Left : FingerPos.Top;
-                    }
-
-                    //  なす角が負ならば、右または下になる。
-                    else
-                    {
-                        //  変位ベクトルと基準のキーの右下方向ベクトルとのなす角が、
-                        //  正ならば右になり、負ならば下となる。
-                        return (Vector.AngleBetween(new Vector(width, -height), vec) > 0) ? FingerPos.Right : FingerPos.Bottom;
-                    }
-                }).Publish();
+                this.DetectFingerPos).Publish();
             fingerPosStream.Connect().AddTo(this.disposable);
 
             this.fingerPos = fingerPosStream.ToReadOnlyReactiveProperty().AddTo(this.disposable);
@@ -207,7 +181,7 @@ namespace Flickey.Controls
                 .AddTo(this.disposable);
 
             //  キーの印字を設定する。
-            this.SetCharacterSets();
+            this.SetKeyLabels();
 
             //  キーにストリームを渡して、状態をリフレッシュさせる。
             for (int y = 0; y < 5; y++)
@@ -231,7 +205,8 @@ namespace Flickey.Controls
         {
             this.disposable.Dispose();
         }
-
+        
+        //  キーボードの種類が変更されたとき。
         private static void OnKeyboardTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var keyboard = (Keyboard)d;
@@ -247,8 +222,10 @@ namespace Flickey.Controls
             }
         }
 
+        //  文字の入力が確定されたとき。
         private void OnCharacterReceived(string character)
         {
+            //  キーボードの切り替えをする。
             switch (character)
             {
                 case "Ctrl+α": this.KeyboardType = KeyboardType.Shortcuts; return;
@@ -257,25 +234,33 @@ namespace Flickey.Controls
                 case "あいう": this.KeyboardType = KeyboardType.Japanese; return;
             }
 
+            //  一時的な処理だけども、アルファベットを小文字にする。
+            if (character.Length == 1)
+            {
+                var c = character[0];
+                if ('A' <= c && c <= 'Z')
+                    character = char.ToLower(c).ToString();
+            }
+
             Command.Execute(character);
         }
 
-        //  各キーに文字セットを割り当てる。
-        private void SetCharacterSets()
+        //  各キーにラベルを割り当てる。
+        private void SetKeyLabels()
         {
             var fileNames = new[] { "Shortcuts.json", "Number.json", "English.json", "Japanese.json" };
 
             //  エラー時の処理は検討中だが、ダミーデータとして「*」が表示されるデータを流す。
             var dummy = Enumerable.Range(1, 25)
-                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { "*", null, null, null, null }))
+                .Select(_ => new KeyLabel { LabelStyle = LabelDisplayStyle.OnlyFirstCharacter, Characters = new[] { "*", null, null, null, null } })
                 .ToList();
 
             //  JSONから印字データを読み取り、各キーに設定していく。
             fileNames.ToObservable()
-                .Select(name => JsonConvert.DeserializeObject<List<CharacterSet>>(File.ReadAllText(name)))
+                .Select(name => JsonConvert.DeserializeObject<List<KeyLabel>>(File.ReadAllText(name)))
                 .OnErrorResumeNext(Observable.Return(dummy))
                 .ToArray()
-                .Subscribe(setsArray =>
+                .Subscribe(labels =>
                 {
                     for (var y = 0; y < 5; y++)
                     {
@@ -284,12 +269,39 @@ namespace Flickey.Controls
                             var index = y * 5 + x;
                             var key = this.keys[y][x];
 
-                            var sets = Enumerable.Range(0, 4).Select(n => setsArray[n][index]).ToArray();
-                            key.CharacterSets = sets;
+                            key.Labels = Enumerable.Range(0, 4).Select(n => labels[n][index]).ToArray();
                         }
                     }
                 });
         }
 
+        //  指の位置を判定する。
+        private FingerPos DetectFingerPos((Key key, TouchEventArgs args) current, (Key key, TouchEventArgs args) reference)
+        {
+            //  基準のキーの中心からの位置をベクトルで取得する。
+            var width = reference.key.ActualWidth;
+            var height = reference.key.ActualHeight;
+            var relativePos = current.args.GetTouchPoint(reference.key).Position;
+            var vec = new Vector(relativePos.X - width / 2, -(relativePos.Y - height / 2));
+
+            //  X成分とY成分の絶対値がそれぞれ、幅と高さの半分よりも小さければ、基準のキーからはみ出していない。
+            if (Math.Abs(vec.X) <= width / 2 && Math.Abs(vec.Y) <= height / 2) return FingerPos.Neutral;
+
+            //  変位ベクトルと基準のキーの右上方向ベクトルとのなす角が正ならば、左または上になる。
+            else if (Vector.AngleBetween(new Vector(width, height), vec) > 0)
+            {
+                //  変位ベクトルと基準のキーの左上方向ベクトルとのなす角が、
+                //  正ならば左になり、負ならば上となる。
+                return (Vector.AngleBetween(new Vector(-width, height), vec) > 0) ? FingerPos.Left : FingerPos.Top;
+            }
+
+            //  なす角が負ならば、右または下になる。
+            else
+            {
+                //  変位ベクトルと基準のキーの右下方向ベクトルとのなす角が、
+                //  正ならば右になり、負ならば下となる。
+                return (Vector.AngleBetween(new Vector(width, -height), vec) > 0) ? FingerPos.Right : FingerPos.Bottom;
+            }
+        }
     }
 }

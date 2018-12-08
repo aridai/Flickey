@@ -128,7 +128,7 @@
       <DependentUpon>Keyboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\KeyboardComponents\KeyboardType.cs" />
-    <Compile Include="Controls\KeyboardComponents\CharacterSet.cs" />
+    <Compile Include="Controls\KeyboardComponents\KeyLabel.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyEffect.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyShape.cs" />
     <Compile Include="Controls\KeyboardComponents\LabelStyle.cs" />

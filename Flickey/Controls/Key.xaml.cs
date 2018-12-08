@@ -65,14 +65,14 @@ namespace Flickey.Controls
         }
 
         /// <summary>
-        /// キーボードの文字の集合のコレクションを取得・設定します。
+        /// キーボードのラベルを取得・設定します。
         /// </summary>
-        public IReadOnlyList<CharacterSet> CharacterSets { get; set; }
+        public IReadOnlyList<KeyLabel> Labels { get; set; }
 
         /// <summary>
-        /// 現在選択中のキーボードの文字の集合を取得します。
+        /// 現在選択中のキーボードのラベルを取得します。
         /// </summary>
-        public CharacterSet CurrentCharacterSet => this.CharacterSets[(int)this.KeyboardType];
+        public KeyLabel CurrentLabel => this.Labels[(int)this.KeyboardType];
 
         /// <summary>
         /// Shapeプロパティの依存関係プロパティ。
@@ -90,7 +90,7 @@ namespace Flickey.Controls
         /// LabelStyleプロパティの依存関係プロパティ。
         /// </summary>
         public static DependencyProperty LabelStyleProperty
-            = DependencyProperty.Register(nameof(LabelStyle), typeof(LabelStyle), typeof(Key), new PropertyMetadata(LabelStyle.OnlyFirstCharacter));
+            = DependencyProperty.Register(nameof(LabelStyle), typeof(LabelDisplayStyle), typeof(Key), new PropertyMetadata(LabelDisplayStyle.OnlyFirstCharacter));
 
         /// <summary>
         /// PrimaryTextプロパティの依存関係プロパティ。
@@ -128,9 +128,9 @@ namespace Flickey.Controls
         /// キーの印字の表示方法を取得・設定します。
         /// 依存関係プロパティです。
         /// </summary>
-        public LabelStyle LabelStyle
+        public LabelDisplayStyle LabelStyle
         {
-            get => (LabelStyle)this.GetValue(LabelStyleProperty);
+            get => (LabelDisplayStyle)this.GetValue(LabelStyleProperty);
             set => this.SetValue(LabelStyleProperty, value);
         }
 
@@ -219,11 +219,11 @@ namespace Flickey.Controls
             //  形をリセットする。
             this.Shape = KeyShape.Normal;
             this.KeyEffect = KeyEffect.NoEffect;
-            this.LabelStyle = this.CurrentCharacterSet.LabelStyle;
+            this.LabelStyle = this.CurrentLabel.LabelStyle;
 
             //  印字の表示方法に応じて印字を設定する。
-            var chars = this.CurrentCharacterSet.Characters.Where(c => c != null).ToArray();
-            this.PrimaryText = (this.LabelStyle == LabelStyle.OneLine) ? chars.Aggregate(string.Empty, (total, next) => total + next) : chars.First();
+            var chars = this.CurrentLabel.Characters.Where(c => c != null).ToArray();
+            this.PrimaryText = (this.LabelStyle == LabelDisplayStyle.OneLine) ? chars.Aggregate(string.Empty, (total, next) => total + next) : chars.First();
             this.SecondaryText = chars.Skip(1).Aggregate(string.Empty, (total, next) => total + next);
         }
 
@@ -251,7 +251,7 @@ namespace Flickey.Controls
             var grid = this.GetAdjacentGridNums(target, pos);
             if (grid == (this.Row, this.Column))
             {
-                var character = target.CurrentCharacterSet.Characters[(int)pos];
+                var character = target.CurrentLabel.Characters[(int)pos];
                 sender(character);
             }
         }
@@ -266,7 +266,7 @@ namespace Flickey.Controls
             //  操作対象のキーの持つ文字の配列を取得しておく。
             //  この配列は中央・左・上・右・下の順に文字が格納されていて、
             //  nullのときは、ホールド時のキーを表示させない。
-            var chars = target.CurrentCharacterSet.Characters.ToArray();
+            var chars = target.CurrentLabel.Characters.ToArray();
 
             //  文字がポップアップ表示されるところにあるキーの形を変更しておく。
             for (int i = 0; i < chars.Length; i++)
@@ -295,7 +295,7 @@ namespace Flickey.Controls
                 if (this.Shape < KeyShape.HoldCenter) return;
 
                 this.KeyEffect = KeyEffect.NoEffect;
-                if (!string.IsNullOrWhiteSpace(target.CurrentCharacterSet.Characters[(int)pos]))
+                if (!string.IsNullOrWhiteSpace(target.CurrentLabel.Characters[(int)pos]))
                 {
                     //  指の位置にあるキーをフォーカスする。
                     var grid = this.GetAdjacentGridNums(target, pos);
@@ -308,7 +308,7 @@ namespace Flickey.Controls
             else
             {
                 //  操作対象のキーの持つ文字の配列を取得しておく。
-                var chars = target.CurrentCharacterSet.Characters;
+                var chars = target.CurrentLabel.Characters;
 
                 //  スライド可能な向きにあるキーをループで回す。
                 for (int i = 0; i < chars.Count; i++)
