@@ -178,6 +178,8 @@
     { "character": "を", "mode": "Japanese", "keys": [ [ "W" ], [ "O" ] ] },
     { "character": "ん", "mode": "Japanese", "keys": [ [ "N" ], [ ], [ "N" ] ] },
 
+    { "character": "ゔ", "mode": "Japanese", "keys": [ [ "V"] , [ "U" ] ] },
+
     { "character": "が", "mode": "Japanese", "keys": [ [ "G"] , [ "A" ] ] },
     { "character": "ぎ", "mode": "Japanese", "keys": [ [ "G"] , [ "I" ] ] },
     { "character": "ぐ", "mode": "Japanese", "keys": [ [ "G"] , [ "U" ] ] },

@@ -7,7 +7,8 @@
 
     { "before": "ぁ", "after": "あ" },
     { "before": "ぃ", "after": "い" },
-    { "before": "ぅ", "after": "う" },
+    { "before": "ぅ", "after": "ゔ" },
+    { "before": "ゔ", "after": "う" },
     { "before": "ぇ", "after": "え" },
     { "before": "ぉ", "after": "お" },
     
