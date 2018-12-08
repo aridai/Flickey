@@ -232,6 +232,7 @@ namespace Flickey.Controls
                 case "☆123": this.KeyboardType = KeyboardType.Number; return;
                 case "ABC": this.KeyboardType = KeyboardType.English; return;
                 case "あいう": this.KeyboardType = KeyboardType.Japanese; return;
+                case null: return;
             }
 
             //  一時的な処理だけども、アルファベットを小文字にする。
