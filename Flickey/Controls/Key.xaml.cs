@@ -20,7 +20,7 @@ namespace Flickey.Controls
     {
         private readonly CompositeDisposable disposable = new CompositeDisposable();
 
-        private int? raw;
+        private int? row;
 
         private int? column;
 
@@ -44,7 +44,7 @@ namespace Flickey.Controls
         /// <summary>
         /// GridのRowの値を取得します。
         /// </summary>
-        public int Row => this.raw ?? (int)(this.raw = Grid.GetRow(this));
+        public int Row => this.row ?? (int)(this.row = Grid.GetRow(this));
 
         /// <summary>
         /// GridのColumnの値を取得します。
