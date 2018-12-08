@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace Flickey.Models
@@ -28,9 +29,9 @@ namespace Flickey.Models
             this.fileReader = fileReader ?? throw new ArgumentNullException(nameof(fileReader));
             var jsonStr = this.fileReader.ReadAllText(JsonFileName);
 
-            var obj = JsonConvert.DeserializeObject<List<(string before, string after)>>(jsonStr);
-            this.dictionary = obj.Where(tuple => !string.IsNullOrEmpty(tuple.before) && !string.IsNullOrEmpty(tuple.after))
-                .ToDictionary(tuple => tuple.before, tuple => tuple.after);
+            var obj = JsonConvert.DeserializeObject<List<ConversionPair>>(jsonStr);
+            this.dictionary = obj.Where(pair => !string.IsNullOrEmpty(pair.Before) && !string.IsNullOrEmpty(pair.After))
+                .ToDictionary(pair=> pair.Before, pair => pair.After);
         }
 
         /// <summary>
@@ -42,6 +43,16 @@ namespace Flickey.Models
         {
             if (this.dictionary.TryGetValue(character, out var converted)) return converted;
             return null;
+        }
+
+        [DataContract]
+        internal struct ConversionPair
+        {
+            [DataMember(Name = "before")]
+            public string Before { get; set; }
+
+            [DataMember(Name = "after")]
+            public string After { get; set; }
         }
     }
 }

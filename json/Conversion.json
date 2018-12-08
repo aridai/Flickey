@@ -78,7 +78,7 @@
 
     { "before": "A", "after": "a" },
     { "before": "B", "after": "b" },
-    { "before": "C", "after": "d" },
+    { "before": "C", "after": "c" },
     { "before": "D", "after": "d" },
     { "before": "E", "after": "e" },
     { "before": "F", "after": "f" },
@@ -105,7 +105,7 @@
 
     { "before": "a", "after": "A" },
     { "before": "b", "after": "B" },
-    { "before": "d", "after": "C" },
+    { "before": "c", "after": "C" },
     { "before": "d", "after": "D" },
     { "before": "e", "after": "E" },
     { "before": "f", "after": "F" },
@@ -128,5 +128,5 @@
     { "before": "w", "after": "W" },
     { "before": "x", "after": "X" },
     { "before": "y", "after": "Y" },
-    { "before": "z", "after": "Z" },
+    { "before": "z", "after": "Z" }
 ]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Flickey.Models
 {
@@ -41,7 +42,7 @@ namespace Flickey.Models
             else
             {
                 //  マッピングデータが存在するならば、それを使う。
-                if (this.inputInfoQuery.GetInputInfo(character) is InputInfo info)
+                if (this.inputInfoQuery.GetInputInfo(character) is InputInfo info && info.Structures.Any())
                 {
                     this.prevCharacter =
                         this.SendInputWithInputInfo(info);
@@ -68,8 +69,10 @@ namespace Flickey.Models
             //  変換後の文字を取得して、存在するならば。
             if (this.conversionQuery.GetConvertedCharacter(prevCharacter) is string converted)
             {
+                KeyboardOperator.InputKey(VirtualKeyCode.Back);
+
                 //  変換後の文字も、入力情報が存在すれば、それに従って入力する。
-                if (this.inputInfoQuery.GetInputInfo(converted) is InputInfo info)
+                if (this.inputInfoQuery.GetInputInfo(converted) is InputInfo info && info.Structures.Any())
                     this.SendInputWithInputInfo(info);
 
                 else this.SendInputDirectly(converted);

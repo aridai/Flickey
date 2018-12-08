@@ -137,7 +137,6 @@
     <Compile Include="Models\IFileReader.cs" />
     <Compile Include="Models\InputInfo.cs" />
     <Compile Include="Models\InputMode.cs" />
-    <Compile Include="Models\KeyMapping.cs" />
     <Compile Include="Models\Inputter.cs" />
     <Compile Include="Models\KeyboardOperator.cs" />
     <Compile Include="Models\InputInfoQuery.cs" />

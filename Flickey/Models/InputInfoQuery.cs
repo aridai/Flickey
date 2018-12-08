@@ -38,7 +38,7 @@ namespace Flickey.Models
             this.dictionary = obj.Select(data => (character: data.Character, mode: data.Mode, structures: this.GenerateInputStructures(data.KeyCodes)))
                 .Select(tuple => tuple.structures != null ? new InputInfo(tuple.character, tuple.mode, tuple.structures) : null)
                 .Where(info => info != null)
-                .ToDictionary(info => info.Character, info => info);
+                .ToDictionary(info => info.Character, info => info, StringComparer.Ordinal);
         }
 
         /// <summary>
