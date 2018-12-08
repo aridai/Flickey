@@ -223,5 +223,13 @@ namespace Flickey.Tests
 
             return inputs;
         }
+
+        private void OutputInputsElements(IEnumerable<INPUT> inputs)
+        {
+            foreach (var input in inputs)
+            {
+                System.Diagnostics.Debug.WriteLine($"{(VirtualKeyCode)input.ki.wVk}, {input.ki.dwFlags}");
+            }
+        }
     }
 }

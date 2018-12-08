@@ -12,7 +12,7 @@
 
     { "character": "☆", "mode": "Direct", "keys": [ [ ] ] },
     { "character": "♪", "mode": "Direct", "keys": [ [ ] ] },
-    { "character": "→", "mode": "Japanese", "keys": [ [ "Y" ], [ "A" ], [ "J" ], [ "I" ], [ "R" ], [ "U" ], [ "S" ], [ "I" ] ] },
+    { "character": "→", "mode": "Japanese", "keys": [ [ "Y" ], [ "A" ], [ "J" ], [ "I" ], [ "R" ], [ "U" ], [ "S" ], [ "I" ], [ "Space" ] ] },
 
     { "character": "￥", "mode": "Direct", "keys": [ [ ] ] },
     { "character": "$", "mode": "Direct", "keys": [ [ ] ] },
@@ -149,7 +149,7 @@
 
     { "character": "わ", "mode": "Japanese", "keys": [ [ "W" ], [ "A" ] ] },
     { "character": "を", "mode": "Japanese", "keys": [ [ "W" ], [ "O" ] ] },
-    { "character": "ん", "mode": "Japanese", "keys": [ [ "N" ], [ "N" ] ] },
+    { "character": "ん", "mode": "Japanese", "keys": [ [ "N" ], [ ], [ "N" ] ] },
 
     { "character": "が", "mode": "Japanese", "keys": [ [ "G"] , [ "A" ] ] },
     { "character": "ぎ", "mode": "Japanese", "keys": [ [ "G"] , [ "I" ] ] },

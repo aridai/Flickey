@@ -55,7 +55,26 @@ namespace Flickey.Models
         //  仮想キーコードの2次元リストからINPUT構造体のリストを作る。
         private IReadOnlyList<INPUT> GenerateInputStructures(IReadOnlyList<IReadOnlyList<VirtualKeyCode>> keys)
         {
-            return null;
+            var list = new LinkedList<INPUT>();
+
+            for (int step = 0; step <= keys.Count; step++)
+            {
+                //  最初と最後に空配列があるかのように振る舞わせる。
+                var current = (step != keys.Count) ? keys[step] : Enumerable.Empty<VirtualKeyCode>();
+                var prev = (step != 0) ? keys[step - 1] : Enumerable.Empty<VirtualKeyCode>();
+
+                //  前ステップで書かれていて、現ステップで書かれていないキーは離す。
+                var inputs1 = prev.Where(key => !current.Contains(key))
+                    .Select(key => new INPUT { type = InputType.INPUT_KEYBOARD, ki = new KEYBDINPUT { wVk = (ushort)key, dwFlags = KeyboardInputFlag.KEYEVENTF_KEYUP } });
+
+                //  現ステップで書かれていて、前ステップで書かれていないキーは押す。
+                var inputs2 = current.Where(key => !prev.Contains(key))
+                    .Select(key => new INPUT { type = InputType.INPUT_KEYBOARD, ki = new KEYBDINPUT { wVk = (ushort)key, dwFlags = KeyboardInputFlag.KEYEVENTF_NONE } });
+
+                foreach (var input in Enumerable.Concat(inputs1, inputs2)) list.AddLast(input);
+            }
+
+            return list.ToList();
         }
 
         [DataContract]
@@ -68,7 +87,7 @@ namespace Flickey.Models
             public InputMode Mode { get; set; }
 
             [DataMember(Name = "keys")]
-            public List<List<VirtualKeyCode>> KeyCodes;
+            public List<List<VirtualKeyCode>> KeyCodes { get; set; }
         }
     }
 }
