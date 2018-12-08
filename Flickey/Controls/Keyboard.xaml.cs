@@ -146,33 +146,7 @@ namespace Flickey.Controls
             var fingerPosStream = Observable.WithLatestFrom(
                 this.touchMoveStream,
                 this.touchDownStream,
-                (current, reference) =>
-                {
-                    //  基準のキーの中心からの位置をベクトルで取得する。
-                    var width = reference.key.ActualWidth;
-                    var height = reference.key.ActualHeight;
-                    var relativePos = current.args.GetTouchPoint(reference.key).Position;
-                    var vec = new Vector(relativePos.X - width / 2, -(relativePos.Y - height / 2));
-
-                    //  X成分とY成分の絶対値がそれぞれ、幅と高さの半分よりも小さければ、基準のキーからはみ出していない。
-                    if (Math.Abs(vec.X) <= width / 2 && Math.Abs(vec.Y) <= height / 2) return FingerPos.Neutral;
-
-                    //  変位ベクトルと基準のキーの右上方向ベクトルとのなす角が正ならば、左または上になる。
-                    else if (Vector.AngleBetween(new Vector(width, height), vec) > 0)
-                    {
-                        //  変位ベクトルと基準のキーの左上方向ベクトルとのなす角が、
-                        //  正ならば左になり、負ならば上となる。
-                        return (Vector.AngleBetween(new Vector(-width, height), vec) > 0) ? FingerPos.Left : FingerPos.Top;
-                    }
-
-                    //  なす角が負ならば、右または下になる。
-                    else
-                    {
-                        //  変位ベクトルと基準のキーの右下方向ベクトルとのなす角が、
-                        //  正ならば右になり、負ならば下となる。
-                        return (Vector.AngleBetween(new Vector(width, -height), vec) > 0) ? FingerPos.Right : FingerPos.Bottom;
-                    }
-                }).Publish();
+                this.DetectFingerPos).Publish();
             fingerPosStream.Connect().AddTo(this.disposable);
 
             this.fingerPos = fingerPosStream.ToReadOnlyReactiveProperty().AddTo(this.disposable);
@@ -301,5 +275,33 @@ namespace Flickey.Controls
                 });
         }
 
+        //  指の位置を判定する。
+        private FingerPos DetectFingerPos((Key key, TouchEventArgs args) current, (Key key, TouchEventArgs args) reference)
+        {
+            //  基準のキーの中心からの位置をベクトルで取得する。
+            var width = reference.key.ActualWidth;
+            var height = reference.key.ActualHeight;
+            var relativePos = current.args.GetTouchPoint(reference.key).Position;
+            var vec = new Vector(relativePos.X - width / 2, -(relativePos.Y - height / 2));
+
+            //  X成分とY成分の絶対値がそれぞれ、幅と高さの半分よりも小さければ、基準のキーからはみ出していない。
+            if (Math.Abs(vec.X) <= width / 2 && Math.Abs(vec.Y) <= height / 2) return FingerPos.Neutral;
+
+            //  変位ベクトルと基準のキーの右上方向ベクトルとのなす角が正ならば、左または上になる。
+            else if (Vector.AngleBetween(new Vector(width, height), vec) > 0)
+            {
+                //  変位ベクトルと基準のキーの左上方向ベクトルとのなす角が、
+                //  正ならば左になり、負ならば上となる。
+                return (Vector.AngleBetween(new Vector(-width, height), vec) > 0) ? FingerPos.Left : FingerPos.Top;
+            }
+
+            //  なす角が負ならば、右または下になる。
+            else
+            {
+                //  変位ベクトルと基準のキーの右下方向ベクトルとのなす角が、
+                //  正ならば右になり、負ならば下となる。
+                return (Vector.AngleBetween(new Vector(width, -height), vec) > 0) ? FingerPos.Right : FingerPos.Bottom;
+            }
+        }
     }
 }
