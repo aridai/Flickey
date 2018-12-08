@@ -46,26 +46,7 @@ namespace Flickey.ViewModels
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this.disposable);
 
-            commandSubject.Select(str =>
-            {
-                //  TODO:
-                //  印字の管理方法を変える。
-                //  表示上の文字と、Modelへ送られる文字を別々にする。
-                //  アルファベットキーは印字は大文字だが、送信されるのは小文字にしたい。
-                //  このSelect句は一時的なもの。
-
-                if (str.Length == 1)
-                {
-                    var character = str[0];
-                    if ('A' <= character && character <= 'Z')
-                    {
-                        return char.ToLower(character).ToString();
-                    }
-                }
-
-                return str;
-            }
-            ).Subscribe(character => this.inputter.Input(character)).AddTo(this.disposable);
+            commandSubject.Subscribe(character => this.inputter.Input(character)).AddTo(this.disposable);
         }
 
         /// <summary>

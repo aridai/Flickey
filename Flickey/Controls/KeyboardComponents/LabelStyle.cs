@@ -7,7 +7,7 @@ namespace Flickey.Controls.KeyboardComponents
     /// キーの印字の表示方法を列挙します。
     /// </summary>
     [DataContract]
-    public enum LabelStyle
+    public enum LabelDisplayStyle
     {
         /// <summary>
         /// 最初の文字のみを表示します。

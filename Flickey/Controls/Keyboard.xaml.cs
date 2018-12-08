@@ -207,7 +207,7 @@ namespace Flickey.Controls
                 .AddTo(this.disposable);
 
             //  キーの印字を設定する。
-            this.SetCharacterSets();
+            this.SetKeyLabels();
 
             //  キーにストリームを渡して、状態をリフレッシュさせる。
             for (int y = 0; y < 5; y++)
@@ -231,7 +231,8 @@ namespace Flickey.Controls
         {
             this.disposable.Dispose();
         }
-
+        
+        //  キーボードの種類が変更されたとき。
         private static void OnKeyboardTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var keyboard = (Keyboard)d;
@@ -247,8 +248,10 @@ namespace Flickey.Controls
             }
         }
 
+        //  文字の入力が確定されたとき。
         private void OnCharacterReceived(string character)
         {
+            //  キーボードの切り替えをする。
             switch (character)
             {
                 case "Ctrl+α": this.KeyboardType = KeyboardType.Shortcuts; return;
@@ -257,25 +260,33 @@ namespace Flickey.Controls
                 case "あいう": this.KeyboardType = KeyboardType.Japanese; return;
             }
 
+            //  一時的な処理だけども、アルファベットを小文字にする。
+            if (character.Length == 1)
+            {
+                var c = character[0];
+                if ('A' <= c && c <= 'Z')
+                    character = char.ToLower(c).ToString();
+            }
+
             Command.Execute(character);
         }
 
-        //  各キーに文字セットを割り当てる。
-        private void SetCharacterSets()
+        //  各キーにラベルを割り当てる。
+        private void SetKeyLabels()
         {
             var fileNames = new[] { "Shortcuts.json", "Number.json", "English.json", "Japanese.json" };
 
             //  エラー時の処理は検討中だが、ダミーデータとして「*」が表示されるデータを流す。
             var dummy = Enumerable.Range(1, 25)
-                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { "*", null, null, null, null }))
+                .Select(_ => new KeyLabel { LabelStyle = LabelDisplayStyle.OnlyFirstCharacter, Characters = new[] { "*", null, null, null, null } })
                 .ToList();
 
             //  JSONから印字データを読み取り、各キーに設定していく。
             fileNames.ToObservable()
-                .Select(name => JsonConvert.DeserializeObject<List<CharacterSet>>(File.ReadAllText(name)))
+                .Select(name => JsonConvert.DeserializeObject<List<KeyLabel>>(File.ReadAllText(name)))
                 .OnErrorResumeNext(Observable.Return(dummy))
                 .ToArray()
-                .Subscribe(setsArray =>
+                .Subscribe(labels =>
                 {
                     for (var y = 0; y < 5; y++)
                     {
@@ -284,8 +295,7 @@ namespace Flickey.Controls
                             var index = y * 5 + x;
                             var key = this.keys[y][x];
 
-                            var sets = Enumerable.Range(0, 4).Select(n => setsArray[n][index]).ToArray();
-                            key.CharacterSets = sets;
+                            key.Labels = Enumerable.Range(0, 4).Select(n => labels[n][index]).ToArray();
                         }
                     }
                 });
