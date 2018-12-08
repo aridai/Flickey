@@ -7,27 +7,82 @@
     xmlns:behaviors="clr-namespace:Flickey.Behaviors"
     xmlns:viewmodels="clr-namespace:Flickey.ViewModels"
     Title="Flickey"
-    Width="450"
-    Height="400"
+    Width="480"
+    Height="420"
     Topmost="True"
     Focusable="False"
     ShowActivated="False"
+    UseLayoutRounding="True"
     SnapsToDevicePixels="True"
     Stylus.IsPressAndHoldEnabled="False"
+    BorderThickness="1"
+    BorderBrush="MediumPurple"
     Background="{StaticResource KeyboardBackground}">
 
     <i:Interaction.Behaviors>
         <behaviors:MainWindowSetupBehavior />
         <behaviors:MainWindowDisposeBehavior />
+        <behaviors:MainWindowDragAndMoveBehavior />
     </i:Interaction.Behaviors>
+
+    <Window.Resources>
+        <Style x:Key="CaptionButton" TargetType="{x:Type Button}">
+            <Setter Property="FontFamily" Value="Marlett"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" Background="Transparent" SnapsToDevicePixels="True">
+                            <Border.Effect>
+                                <DropShadowEffect Opacity="0"/>
+                            </Border.Effect>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="border"
+                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                            To="Gray" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="border"
+                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                            To="#FF007ACC" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        </Style>
+    </Window.Resources>
 
     <Window.DataContext>
         <viewmodels:MainWindowViewModel />
     </Window.DataContext>
 
+    <WindowChrome.WindowChrome>
+        <WindowChrome CornerRadius="5" GlassFrameThickness="1" ResizeBorderThickness="1" UseAeroCaptionButtons="False" CaptionHeight="32" />
+    </WindowChrome.WindowChrome>
+
     <Window.Content>
-        <Grid>
+        <Grid WindowChrome.IsHitTestVisibleInChrome="True">
             <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
                 <RowDefinition Height="32" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="32" />
@@ -39,8 +94,24 @@
                 <ColumnDefinition Width="32" />
             </Grid.ColumnDefinitions>
 
-            <controls:Keyboard x:Name="keyboard" Grid.Row="1" Grid.Column="1" Command="{Binding Command}" />
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Button Width="44" FontSize="16" Content="r" Foreground="White" Style="{StaticResource CaptionButton}">
+                    <i:Interaction.Behaviors>
+                        <behaviors:CloseButtonBehavior />
+                    </i:Interaction.Behaviors>
+                </Button>
+                <Button Width="44" FontSize="16" Content="0" Foreground="White" Style="{StaticResource CaptionButton}">
+                    <i:Interaction.Behaviors>
+                        <behaviors:MinimizeButtonBehavior />
+                    </i:Interaction.Behaviors>
+                </Button>
+            </StackPanel>
+
+            <controls:Keyboard x:Name="keyboard" Grid.Row="2" Grid.Column="1" Command="{Binding Command}">
+                <i:Interaction.Behaviors>
+                    <behaviors:KeyboardDragCancelBehavior />
+                </i:Interaction.Behaviors>
+            </controls:Keyboard>
         </Grid>
     </Window.Content>
-
 </Window>
