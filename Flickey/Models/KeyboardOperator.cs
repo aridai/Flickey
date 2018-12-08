@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Flickey.Models
@@ -67,8 +68,8 @@ namespace Flickey.Models
         }
 
         /// <summary>
-        /// キー入力を行います。
-        /// キーストロークをシミュレートすることで入力します。
+        /// 同時押しのキー入力を行います。
+        /// 複数のキーの同時ストロークをシミュレートすることで入力します。
         /// </summary>
         /// <param name="virtualKeyCode">仮想キーコード。</param>
         public static void InputKey(IReadOnlyList<VirtualKeyCode> virtualKeyCodes)
@@ -84,6 +85,16 @@ namespace Flickey.Models
             }
 
             PInvokeFunctions.SendInput(length * 2, inputs, SizeOfInputStructure);
+        }
+
+        /// <summary>
+        /// <see cref="INPUT"/>構造体のコレクションを指定して入力を行います。
+        /// </summary>
+        /// <param name="inputStructures"><see cref="INPUT"/>構造体のコレクション。</param>
+        public static void SendInput(IEnumerable<INPUT> inputStructures)
+        {
+            var array = inputStructures.ToArray();
+            PInvokeFunctions.SendInput(array.Length, array, SizeOfInputStructure);
         }
 
         /// <summary>

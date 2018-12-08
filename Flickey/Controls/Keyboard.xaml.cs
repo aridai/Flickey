@@ -7,7 +7,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using Newtonsoft.Json;
 using Reactive.Bindings;
@@ -27,11 +26,6 @@ namespace Flickey.Controls
 
         //  入力操作のホールド操作だと判定されるまでのタイムアウト。
         private readonly TimeSpan holdDetectionTimeout = TimeSpan.FromSeconds(0.5);
-
-        //  入力操作時のスライド入力とみなされる指の移動量のしきい値。
-        //  この値は可変にしたい。
-        //  キーの横幅であるとか。
-        private readonly float distanceThreshold = 64.0f;
 
         private readonly CompositeDisposable disposable = new CompositeDisposable();
 
@@ -60,7 +54,7 @@ namespace Flickey.Controls
         /// KeyboardTypeプロパティの依存関係プロパティ。
         /// </summary>
         public static readonly DependencyProperty KeyboardTypeProperty =
-            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.Number, OnKeyboardTypeChanged));
+            DependencyProperty.Register(nameof(KeyboardType), typeof(KeyboardType), typeof(Keyboard), new PropertyMetadata(KeyboardType.English, OnKeyboardTypeChanged));
 
         /// <summary>
         /// 入力確定時に呼ばれるコマンドの依存関係プロパティ。
@@ -150,19 +144,9 @@ namespace Flickey.Controls
 
             //  指の位置を通知する。
             var fingerPosStream = Observable.WithLatestFrom(
-                this.touchMoveStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
-                this.touchDownStream.Select(tuple => tuple.args.GetTouchPoint(null).Position),
-                (current, starting) => current - starting)
-                .Select(vec =>
-                {
-                    if (Math.Abs(vec.X) > this.distanceThreshold || Math.Abs(vec.Y) > this.distanceThreshold)
-                    {
-                        if (Math.Abs(vec.X) > Math.Abs(vec.Y)) return (vec.X > 0) ? FingerPos.Right : FingerPos.Left;
-                        else return (vec.Y > 0) ? FingerPos.Bottom : FingerPos.Top;
-                    }
-
-                    return FingerPos.Neutral;
-                }).Publish();
+                this.touchMoveStream,
+                this.touchDownStream,
+                this.DetectFingerPos).Publish();
             fingerPosStream.Connect().AddTo(this.disposable);
 
             this.fingerPos = fingerPosStream.ToReadOnlyReactiveProperty().AddTo(this.disposable);
@@ -197,7 +181,7 @@ namespace Flickey.Controls
                 .AddTo(this.disposable);
 
             //  キーの印字を設定する。
-            this.SetCharacterSets();
+            this.SetKeyLabels();
 
             //  キーにストリームを渡して、状態をリフレッシュさせる。
             for (int y = 0; y < 5; y++)
@@ -212,10 +196,6 @@ namespace Flickey.Controls
                         this.OnCharacterReceived);
                 }
             }
-
-            //this.inputOperationTarget.Subscribe(tuple => System.Diagnostics.Debug.WriteLine((tuple.key != null && tuple.deviceId != null) ? $"入力中 キー:({tuple.key?.Row},{tuple.key?.Column}), デバイスID:{tuple.deviceId}" : "非入力中"));
-            //this.operationType.Subscribe(type => System.Diagnostics.Debug.WriteLine($"操作タイプ:{type}"));
-            //this.fingerPos.Subscribe(pos => System.Diagnostics.Debug.WriteLine($"相対位置:{pos}"));
         }
 
         /// <summary>
@@ -225,7 +205,8 @@ namespace Flickey.Controls
         {
             this.disposable.Dispose();
         }
-
+        
+        //  キーボードの種類が変更されたとき。
         private static void OnKeyboardTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var keyboard = (Keyboard)d;
@@ -241,70 +222,87 @@ namespace Flickey.Controls
             }
         }
 
+        //  文字の入力が確定されたとき。
         private void OnCharacterReceived(string character)
         {
+            //  キーボードの切り替えをする。
             switch (character)
             {
+                case "Ctrl+α": this.KeyboardType = KeyboardType.Shortcuts; return;
                 case "☆123": this.KeyboardType = KeyboardType.Number; return;
                 case "ABC": this.KeyboardType = KeyboardType.English; return;
                 case "あいう": this.KeyboardType = KeyboardType.Japanese; return;
+                case null: return;
+            }
+
+            //  一時的な処理だけども、アルファベットを小文字にする。
+            if (character.Length == 1)
+            {
+                var c = character[0];
+                if ('A' <= c && c <= 'Z')
+                    character = char.ToLower(c).ToString();
             }
 
             Command.Execute(character);
         }
 
-        //  各キーに文字セットを割り当てる。
-        private void SetCharacterSets()
+        //  各キーにラベルを割り当てる。
+        private void SetKeyLabels()
         {
-            var fileNames = new[] { "Number.json", "English.json", "Japanese.json" };
+            var fileNames = new[] { "Shortcuts.json", "Number.json", "English.json", "Japanese.json" };
 
             //  エラー時の処理は検討中だが、ダミーデータとして「*」が表示されるデータを流す。
-            var dummy = Enumerable.Range(1, 12)
-                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { "*", null, null, null, null }))
-                .ToArray();
+            var dummy = Enumerable.Range(1, 25)
+                .Select(_ => new KeyLabel { LabelStyle = LabelDisplayStyle.OnlyFirstCharacter, Characters = new[] { "*", null, null, null, null } })
+                .ToList();
 
-            //  JSONから印字データを読み取り、(1,1)から(3,4)までのキーに設定していく。
+            //  JSONから印字データを読み取り、各キーに設定していく。
             fileNames.ToObservable()
-                .Select(name => JsonConvert.DeserializeObject<CharacterSet[]>(File.ReadAllText(name)))
+                .Select(name => JsonConvert.DeserializeObject<List<KeyLabel>>(File.ReadAllText(name)))
                 .OnErrorResumeNext(Observable.Return(dummy))
                 .ToArray()
-                .Subscribe(setsArray =>
+                .Subscribe(labels =>
                 {
-                    for (var y = 1; y <= 4; y++)
+                    for (var y = 0; y < 5; y++)
                     {
-                        for (var x = 1; x <= 3; x++)
+                        for (var x = 0; x < 5; x++)
                         {
-                            var index = (y - 1) * 3 + (x - 1);
+                            var index = y * 5 + x;
                             var key = this.keys[y][x];
 
-                            var sets = Enumerable.Range(0, 3).Select(n => setsArray[n][index]).ToArray();
-                            key.CharacterSets = sets;
+                            key.Labels = Enumerable.Range(0, 4).Select(n => labels[n][index]).ToArray();
                         }
                     }
                 });
-
-            //  それ以外のキーの印字を設定する。
-            this.keys[0][0].CharacterSets = this.CreateSingleCharacterSets("◁");
-            this.keys[0][1].CharacterSets = this.CreateSingleCharacterSets("Home");
-            this.keys[0][2].CharacterSets = this.CreateSingleCharacterSets("Esc");
-            this.keys[0][3].CharacterSets = this.CreateSingleCharacterSets("End");
-            this.keys[0][4].CharacterSets = this.CreateSingleCharacterSets("▷");
-            this.keys[1][0].CharacterSets = this.CreateSingleCharacterSets("Tab");
-            this.keys[1][4].CharacterSets = this.CreateSingleCharacterSets("Del");
-            this.keys[2][0].CharacterSets = this.CreateSingleCharacterSets("☆123");
-            this.keys[3][0].CharacterSets = this.CreateSingleCharacterSets("ABC");
-            this.keys[4][0].CharacterSets = this.CreateSingleCharacterSets("あいう");
-            this.keys[2][4].CharacterSets = this.CreateSingleCharacterSets("Back");
-            this.keys[3][4].CharacterSets = this.CreateSingleCharacterSets("Space");
-            this.keys[4][4].CharacterSets = this.CreateSingleCharacterSets("Enter");
         }
 
-        //  機能キーの印字を生成する。
-        private IReadOnlyList<CharacterSet> CreateSingleCharacterSets(string label)
+        //  指の位置を判定する。
+        private FingerPos DetectFingerPos((Key key, TouchEventArgs args) current, (Key key, TouchEventArgs args) reference)
         {
-            return Enumerable.Range(1, 3)
-                .Select(_ => new CharacterSet(LabelStyle.OnlyFirstCharacter, new[] { label, null, null, null, null }))
-                .ToArray();
+            //  基準のキーの中心からの位置をベクトルで取得する。
+            var width = reference.key.ActualWidth;
+            var height = reference.key.ActualHeight;
+            var relativePos = current.args.GetTouchPoint(reference.key).Position;
+            var vec = new Vector(relativePos.X - width / 2, -(relativePos.Y - height / 2));
+
+            //  X成分とY成分の絶対値がそれぞれ、幅と高さの半分よりも小さければ、基準のキーからはみ出していない。
+            if (Math.Abs(vec.X) <= width / 2 && Math.Abs(vec.Y) <= height / 2) return FingerPos.Neutral;
+
+            //  変位ベクトルと基準のキーの右上方向ベクトルとのなす角が正ならば、左または上になる。
+            else if (Vector.AngleBetween(new Vector(width, height), vec) > 0)
+            {
+                //  変位ベクトルと基準のキーの左上方向ベクトルとのなす角が、
+                //  正ならば左になり、負ならば上となる。
+                return (Vector.AngleBetween(new Vector(-width, height), vec) > 0) ? FingerPos.Left : FingerPos.Top;
+            }
+
+            //  なす角が負ならば、右または下になる。
+            else
+            {
+                //  変位ベクトルと基準のキーの右下方向ベクトルとのなす角が、
+                //  正ならば右になり、負ならば下となる。
+                return (Vector.AngleBetween(new Vector(width, -height), vec) > 0) ? FingerPos.Right : FingerPos.Bottom;
+            }
         }
     }
 }

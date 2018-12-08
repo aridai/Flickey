@@ -1,17 +1,31 @@
 [
+    { "style": "OnlyFirstCharacter", "characters": [ "◁", null, null, "Home", null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "Home", null, null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "Esc", null, null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "End", null, null, null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "▷", "End", null, null, null ] },
+
+    { "style": "OnlyFirstCharacter", "characters": [ "Ctrl+α", null, null, null, null ] },
     { "style": "OneLine", "characters": [ "@", "#", "/", "&", "_" ] },
     { "style": "OneLine", "characters": [ "A", "B", "C", null, null ] },
     { "style": "OneLine", "characters": [ "D", "E", "F", null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "Back", "Del", null, null, null ] },
 
+    { "style": "OnlyFirstCharacter", "characters": [ "☆123", null, null, null, null ] },
     { "style": "OneLine", "characters": [ "G", "H", "I", null, null ] },
     { "style": "OneLine", "characters": [ "J", "K", "L", null, null ] },
     { "style": "OneLine", "characters": [ "M", "N", "O", null, null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "Tab", "4 Spaces", "2 Spaces", null, null ] },
 
+    { "style": "OnlyFirstCharacter", "characters": [ "ABC", null, null, null, null ] },
     { "style": "OneLine", "characters": [ "P", "Q", "R", "S", null ] },
     { "style": "OneLine", "characters": [ "T", "U", "V", null, null ] },
     { "style": "OneLine", "characters": [ "W", "X", "Y", "Z", null ] },
-    
+    { "style": "OnlyFirstCharacter", "characters": [ "Space", null, null, null, null ] },
+
+    { "style": "OnlyFirstCharacter", "characters": [ "あいう", null, null, null, null ] },
     { "style": "OnlyFirstCharacter", "characters": [ "a/A", null, null, null, null ] },
     { "style": "OneLine", "characters": [ "'", "\"", "(", ")", null ] },
-    { "style": "OneLine", "characters": [ ".", ",", "?", "!", null ] }
+    { "style": "OneLine", "characters": [ ".", ",", "?", "!", null ] },
+    { "style": "OnlyFirstCharacter", "characters": [ "Enter", null, null, null, null ] }
 ]

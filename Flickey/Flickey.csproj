@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Flickey.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net47\CommonServiceLocator.dll</HintPath>
@@ -117,8 +120,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Behaviors\CloseButtonBehavior.cs" />
+    <Compile Include="Behaviors\KeyboardDragCancelBehavior.cs" />
+    <Compile Include="Behaviors\MainWindowDragAndMoveBehavior.cs" />
     <Compile Include="Behaviors\MainWindowSetupBehavior.cs" />
-    <Compile Include="Behaviors\MainWindowViewModelDisposeBehavior.cs" />
+    <Compile Include="Behaviors\MainWindowDisposeBehavior.cs" />
+    <Compile Include="Behaviors\MinimizeButtonBehavior.cs" />
     <Compile Include="Controls\KeyboardComponents\FingerPos.cs" />
     <Compile Include="Controls\KeyboardComponents\OperationType.cs" />
     <Compile Include="Controls\Key.xaml.cs">
@@ -128,14 +135,18 @@
       <DependentUpon>Keyboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\KeyboardComponents\KeyboardType.cs" />
-    <Compile Include="Controls\KeyboardComponents\CharacterSet.cs" />
+    <Compile Include="Controls\KeyboardComponents\KeyLabel.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyEffect.cs" />
     <Compile Include="Controls\KeyboardComponents\KeyShape.cs" />
     <Compile Include="Controls\KeyboardComponents\LabelStyle.cs" />
+    <Compile Include="Models\ConversionQuery.cs" />
+    <Compile Include="Models\FileReader.cs" />
+    <Compile Include="Models\IFileReader.cs" />
+    <Compile Include="Models\InputInfo.cs" />
     <Compile Include="Models\InputMode.cs" />
-    <Compile Include="Models\KeyMapping.cs" />
     <Compile Include="Models\Inputter.cs" />
     <Compile Include="Models\KeyboardOperator.cs" />
+    <Compile Include="Models\InputInfoQuery.cs" />
     <Compile Include="Models\PInvokeComponents\GUITHREADINFO.cs" />
     <Compile Include="Models\PInvokeComponents\HARDWAREINPUT.cs" />
     <Compile Include="Models\PInvokeComponents\INPUT.cs" />
@@ -147,6 +158,7 @@
     <Compile Include="Models\PInvokeComponents\WindowLongOffset.cs" />
     <Compile Include="Models\PInvokeComponents\WindowPosFlags.cs" />
     <Compile Include="Models\PInvokeComponents\WindowMessage.cs" />
+    <Compile Include="Models\TestFileReader.cs" />
     <Compile Include="Models\VirtualKeyCode.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
@@ -189,7 +201,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\KeyControlTemplates.xaml">
+    <Page Include="Controls\KeyTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -198,7 +210,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Flickey.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy /y "$(SolutionDir)json" "$(TargetDir)"</PreBuildEvent>

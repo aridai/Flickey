@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28306.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flickey", "Flickey\Flickey.csproj", "{B674BD89-271B-42DF-BB80-53BCE6B50411}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flickey.Tests", "Flickey.Tests\Flickey.Tests.csproj", "{8D63B0DD-B4C1-46BC-A58B-369C860705B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B674BD89-271B-42DF-BB80-53BCE6B50411}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B674BD89-271B-42DF-BB80-53BCE6B50411}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B674BD89-271B-42DF-BB80-53BCE6B50411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D63B0DD-B4C1-46BC-A58B-369C860705B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D63B0DD-B4C1-46BC-A58B-369C860705B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D63B0DD-B4C1-46BC-A58B-369C860705B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D63B0DD-B4C1-46BC-A58B-369C860705B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

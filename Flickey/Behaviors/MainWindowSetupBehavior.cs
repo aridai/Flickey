@@ -12,12 +12,12 @@ namespace Flickey.Behaviors
         protected override void OnAttached()
         {
             base.OnAttached();
-            AssociatedObject.Loaded += this.OnLoaded;
+            this.AssociatedObject.Loaded += this.OnLoaded;
         }
 
         protected override void OnDetaching()
         {
-            AssociatedObject.Loaded -= this.OnLoaded;
+            this.AssociatedObject.Loaded -= this.OnLoaded;
             base.OnDetaching();
         }
 
