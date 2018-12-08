@@ -118,6 +118,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Behaviors\CloseButtonBehavior.cs" />
+    <Compile Include="Behaviors\KeyboardDragCancelBehavior.cs" />
+    <Compile Include="Behaviors\MainWindowDragAndMoveBehavior.cs" />
     <Compile Include="Behaviors\MainWindowSetupBehavior.cs" />
     <Compile Include="Behaviors\MainWindowDisposeBehavior.cs" />
     <Compile Include="Behaviors\MinimizeButtonBehavior.cs" />

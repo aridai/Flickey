@@ -7,8 +7,8 @@
     xmlns:behaviors="clr-namespace:Flickey.Behaviors"
     xmlns:viewmodels="clr-namespace:Flickey.ViewModels"
     Title="Flickey"
-    Width="450"
-    Height="400"
+    Width="480"
+    Height="420"
     Topmost="True"
     Focusable="False"
     ShowActivated="False"
@@ -22,6 +22,7 @@
     <i:Interaction.Behaviors>
         <behaviors:MainWindowSetupBehavior />
         <behaviors:MainWindowDisposeBehavior />
+        <behaviors:MainWindowDragAndMoveBehavior />
     </i:Interaction.Behaviors>
 
     <Window.Resources>
@@ -106,8 +107,11 @@
                 </Button>
             </StackPanel>
 
-            <controls:Keyboard x:Name="keyboard" Grid.Row="2" Grid.Column="1" Command="{Binding Command}" />
+            <controls:Keyboard x:Name="keyboard" Grid.Row="2" Grid.Column="1" Command="{Binding Command}">
+                <i:Interaction.Behaviors>
+                    <behaviors:KeyboardDragCancelBehavior />
+                </i:Interaction.Behaviors>
+            </controls:Keyboard>
         </Grid>
     </Window.Content>
-
 </Window>
