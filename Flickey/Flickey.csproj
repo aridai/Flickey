@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Flickey.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net47\CommonServiceLocator.dll</HintPath>
@@ -207,7 +210,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Flickey.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy /y "$(SolutionDir)json" "$(TargetDir)"</PreBuildEvent>
