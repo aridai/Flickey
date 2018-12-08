@@ -2,7 +2,7 @@
 https://github.com/aridai/Flickey  
 フリック入力可能なソフトウェアキーボード。  
 
-![イメージ](flickey.gif)
+![イメージ](image.gif)
 
 ## 使用方法
 キーをタッチすることで文字を入力することができます。  
