@@ -1,0 +1,94 @@
+@startuml クラス図
+
+namespace Flickey {
+    namespace Models {
+        namespace PInvokeComponents {
+            class PInvokeFunctions
+            class INPUT <<struct>>
+        }
+
+        class Inputter {
+            + Input(character: string): void
+        }
+
+        class KeyboardOperator
+        note left: PInvokeのラッピング
+
+        class InputInfo {
+            + Character: string
+            + InputMode: InputMode
+            + Structures: IReadOnlyList<INPUT>
+        }
+
+        enum InputMode
+        class InputInfoQuery {
+            + GetInputInfo(character: string): InputInfo
+        }
+        note right: 文字とキーのマッピング
+
+        class ConversionQuery {
+            + GetConvertedCharacter(character: string): string
+        }
+        note right: 変換処理
+
+        interface IFileReader {
+            ReadAllText(filePath: string): string
+        }
+        note bottom: IOはテスト用に抽象化
+    }
+
+    namespace ViewModels {
+        class MainWindowViewModel {
+            + Command: DelegateCommand<string>
+        }
+    }
+
+    namespace Views {
+        class MainWindow {
+            + DataContext: FrameworkElement
+        }
+    }
+
+    namespace Controls {
+        namespace KeyboardComponents {
+            class きぃぼぉどのこんぽーねんつさんたち
+        }
+        class Keyboard
+        class Key
+    }
+
+    namespace Behaviors {
+        class びへいびあさんたち
+    }
+
+    namespace Tests {
+        class てすとさん
+    }
+    note left: INPUT構造体の生成テスト
+
+    Flickey.Controls.Key --> Flickey.Controls.KeyboardComponents.きぃぼぉどのこんぽーねんつさんたち
+    Flickey.Controls.Keyboard ..> Flickey.Controls.KeyboardComponents.きぃぼぉどのこんぽーねんつさんたち
+
+    Flickey.Controls.Keyboard .> Flickey.Controls.Key
+    Flickey.Views.MainWindow ..> Flickey.Controls.Keyboard
+    Flickey.Views.MainWindow ..> Flickey.Behaviors.びへいびあさんたち
+
+    Flickey.Views.MainWindow --> Flickey.ViewModels.MainWindowViewModel : + DataContext / <<DataBinding>>
+
+    Flickey.Models.KeyboardOperator ..> Flickey.Models.PInvokeComponents.PInvokeFunctions
+    Flickey.Models.KeyboardOperator ..> Flickey.Models.PInvokeComponents.INPUT
+    Flickey.Models.Inputter ..> Flickey.Models.KeyboardOperator
+    Flickey.Models.InputInfoQuery *--> Flickey.Models.InputInfo : + GetInputInfo
+    Flickey.Models.InputInfo -> Flickey.Models.PInvokeComponents.INPUT : + Structures
+    Flickey.Models.InputInfo --> Flickey.Models.InputMode : + InputMode
+    Flickey.Models.Inputter .> Flickey.Models.InputInfoQuery
+    Flickey.Models.Inputter .> Flickey.Models.ConversionQuery
+    Flickey.Models.InputInfoQuery ..> Flickey.Models.IFileReader
+    Flickey.Models.ConversionQuery .> Flickey.Models.IFileReader
+
+    Flickey.ViewModels.MainWindowViewModel ..> Flickey.Models.Inputter : 入力処理
+
+    Flickey.Tests.てすとさん ..> Flickey.Models.PInvokeComponents.INPUT
+}
+
+@enduml
